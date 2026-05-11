@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>薪酬管理台账 | JOINCOM</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sb:#0d111b;--sb-muted:#8b98b1;--sb-active:#1e2b45;
+  --bg:#f2f5fb;--card:#fff;--t1:#0d111b;--t2:#6b7a99;
+  --line:#e4e9f4;--line2:#c8d3e8;--navy:#1a2b52;
+  --ok:#059669;--ok-bg:#d1fae5;
+  --err:#dc2626;--err-bg:#fee2e2;
+  --info:#2563eb;--info-bg:#dbeafe;
+  --purple:#7c3aed;--purple-bg:#ede9fe;
+  --amber:#d97706;--amber-bg:#fef3c7;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',-apple-system,'PingFang SC',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased}
+.topbar{background:var(--sb);padding:7px 24px;display:flex;align-items:center;justify-content:space-between}
+.topbar-l{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.45)}
+.topbar-r{display:flex;gap:16px;font-size:11px;color:rgba(255,255,255,.3)}
+.hdr{background:#fff;border-bottom:1px solid var(--line);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.brand-mark{width:36px;height:36px;background:var(--navy);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.brand-name{font-size:15px;font-weight:700}
+.brand-sub{font-size:11.5px;color:var(--t2)}
+.shell{display:grid;grid-template-columns:252px 1fr;height:calc(100vh - 95px)}
+/* sidebar */
+.sb{background:var(--sb);padding:20px 12px;overflow-y:auto}
+.sb-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sb-muted);padding:0 8px 10px}
+.pi{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;margin-bottom:2px}
+.pi:hover{background:rgba(255,255,255,.05)}
+.pi.on{background:var(--sb-active)}
+.pi-av{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.pi.on .pi-av{background:#2563eb}
+.pi-name{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pi-co{font-size:11px;color:var(--sb-muted);margin-top:1px}
+.pi-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);flex-shrink:0}
+.sb-sep{height:1px;background:rgba(255,255,255,.07);margin:12px 0}
+.btn-np{display:flex;align-items:center;gap:7px;width:100%;padding:9px 12px;border:1.5px dashed rgba(139,152,177,.28);border-radius:10px;background:transparent;color:var(--sb-muted);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-np:hover{border-color:rgba(139,152,177,.6);color:#fff}
+/* main */
+.main{padding:24px 28px;overflow-y:auto}
+.pg-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+.pg-title{font-size:19px;font-weight:700;letter-spacing:-.025em}
+.pg-sub{font-size:12.5px;color:var(--t2);margin-top:3px}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:18px}
+.sc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
+.sc::after{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;border-radius:12px 0 0 12px}
+.ck::after{background:var(--line2)}.cg::after{background:var(--ok)}.cb::after{background:var(--info)}.cp::after{background:var(--purple)}.cr::after{background:var(--err)}
+.sc-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t2);margin-bottom:9px}
+.sc-val{font-size:17px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
+.sc-val.ok{color:var(--ok)}.sc-val.err{color:var(--err)}
+.sc-sub{font-size:11px;color:var(--t2);margin-top:5px}
+/* profile */
+.pstrip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 20px;margin-bottom:16px;display:none;align-items:center;flex-wrap:wrap}
+.pstrip.show{display:flex}
+.pf{padding:0 18px}.pf:first-child{padding-left:4px}
+.pf-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t2);margin-bottom:4px}
+.pf-val{font-size:13px;font-weight:600}
+.pf-sep{width:1px;height:34px;background:var(--line);flex-shrink:0}
+/* table card */
+.lcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.lcard-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line)}
+.lcard-title{font-size:14px;font-weight:700}
+.lcard-hint{font-size:11px;color:var(--t2)}
+.tbl-wrap{overflow-x:auto;max-height:520px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{position:sticky;top:0;z-index:2;background:#f7f9fd;border-bottom:1px solid var(--line);padding:10px 11px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t2);white-space:nowrap}
+thead th:first-child,thead th.la{text-align:left;padding-left:18px}
+thead th.ctr{text-align:center}
+tbody tr{cursor:pointer;border-left:3px solid transparent}
+tbody tr:hover{background:#f7f9fd}
+tbody tr:not(:last-child) td{border-bottom:1px solid var(--line)}
+td{padding:11px 11px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td:first-child,td.la{text-align:left;padding-left:18px}
+td.ctr{text-align:center}
+.r-ok{border-left-color:var(--ok)}.r-err{border-left-color:var(--err)}.r-info{border-left-color:var(--info)}.r-purple{border-left-color:var(--purple)}.r-amber{border-left-color:var(--amber)}
+.pcell{font-weight:700;font-size:13px}
+.dim{color:var(--t2)}.vp{color:var(--err);font-weight:700}.vn{color:var(--info);font-weight:700}.vz{color:var(--t2)}
+.cny-tag{font-size:9.5px;padding:1px 5px;border-radius:4px;background:var(--amber-bg);color:#92400e;font-weight:700;margin-left:5px;vertical-align:middle}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700}
+.pill::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.p-ok{background:var(--ok-bg);color:var(--ok)}.p-ok::before{background:var(--ok)}
+.p-err{background:var(--err-bg);color:var(--err)}.p-err::before{background:var(--err)}
+.p-info{background:var(--info-bg);color:var(--info)}.p-info::before{background:var(--info)}
+.p-purple{background:var(--purple-bg);color:var(--purple)}.p-purple::before{background:var(--purple)}
+.p-amber{background:var(--amber-bg);color:var(--amber)}.p-amber::before{background:var(--amber)}
+.note-cell{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t2);font-size:11.5px}
+.empty{padding:48px 20px;text-align:center;color:var(--t2);font-size:13px}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .12s}
+.btn-dark{background:var(--t1);color:#fff}.btn-dark:hover{background:#1e2b45}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--line)}.btn-ghost:hover{border-color:var(--line2);color:var(--t1)}
+.btn-del{background:transparent;color:var(--err);border:1px solid rgba(220,38,38,.25)}.btn-del:hover{background:var(--err-bg)}
+.btn-inv{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;background:var(--navy);color:#fff;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:inherit}
+.btn-inv:hover{opacity:.8}
+/* modals */
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(13,17,27,.6);z-index:1000;display:none;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2)}
+.m-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--line)}
+.m-title{font-size:15px;font-weight:700}
+.m-x{width:28px;height:28px;border:none;background:var(--bg);border-radius:6px;cursor:pointer;font-size:17px;color:var(--t2);display:flex;align-items:center;justify-content:center;font-family:inherit}
+.m-x:hover{background:var(--line);color:var(--t1)}
+.m-body{padding:18px 22px}
+.m-foot{padding:0 22px 18px;display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.m-foot-l{margin-right:auto}
+.fs{margin-bottom:16px}
+.fs-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg.s2{grid-column:1/-1}
+.f-lbl{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t2)}
+.f-in{padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:13px;color:var(--t1);background:#fff;font-family:inherit}
+.f-in:focus{outline:none;border-color:var(--info);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.f-in[readonly]{background:var(--bg);color:var(--t2)}
+.f-hint{font-size:11px;color:var(--t2);margin-top:2px}
+.ccy-sw{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.ccy-sw button{padding:7px 18px;border:none;background:transparent;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--t2);font-family:inherit}
+.ccy-sw button.on{background:var(--t1);color:#fff}
+.cny-row{display:none;grid-column:1/-1}
+.cny-row.show{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+/* invoice overlay */
+.inv-ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(13,17,27,.75);z-index:2000;display:none;align-items:flex-start;justify-content:center;padding:20px 16px;overflow-y:auto}
+.inv-ov.open{display:flex}
+.inv-wrap{background:#fff;width:100%;max-width:680px;border-radius:8px;box-shadow:0 24px 80px rgba(0,0,0,.3);margin:auto}
+.inv-bar{background:var(--navy);padding:11px 18px;display:flex;align-items:center;justify-content:space-between;border-radius:8px 8px 0 0;gap:8px}
+.inv-bar-title{color:rgba(255,255,255,.65);font-size:12.5px}
+.inv-btns{display:flex;gap:8px}
+.ib{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:7px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:inherit}
+.ib-print{background:#fff;color:var(--navy)}
+.ib-print:hover{background:#f0f4ff}
+.ib-mail{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.ib-mail:hover{background:rgba(255,255,255,.22)}
+.ib-close{background:transparent;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.15);padding:6px 10px}
+.ib-close:hover{color:#fff}
+/* invoice body */
+.inv-body{padding:28px 36px}
+.i-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.i-co-name{font-family:Georgia,serif;font-size:19px;font-weight:700;color:var(--navy)}
+.i-co-en{font-size:10px;color:#9ca3af;letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.i-co-tag{display:inline-block;margin-top:8px;padding:3px 9px;background:#f0f4ff;border-radius:4px;font-size:10px;color:var(--navy);font-weight:600}
+.i-meta{text-align:right}
+.i-meta-lbl{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:3px}
+.i-meta-no{font-size:17px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.i-meta-date{font-size:11px;color:#9ca3af;margin-top:4px}
+.i-gold{height:2px;background:linear-gradient(90deg,#b8922a,#e8c86a,#b8922a);margin:14px 0}
+.i-parties{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #e5e7eb}
+.i-p-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:5px}
+.i-p-name{font-size:13.5px;font-weight:700;margin-bottom:2px}
+.i-p-det{font-size:11.5px;color:#6b7280;line-height:1.6}
+.i-badge{display:inline-flex;align-items:center;margin-top:6px;padding:3px 9px;background:var(--navy);border-radius:4px;font-size:11px;font-weight:600;color:#fff}
+.i-sec{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px}
+.i-tbl{width:100%;border-collapse:collapse;margin-bottom:18px}
+.i-tbl thead th{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9ca3af;padding:7px 10px;text-align:left;border-bottom:1.5px solid var(--navy)}
+.i-tbl thead th:last-child{text-align:right}
+.i-tbl tbody td{padding:9px 10px;font-size:12.5px;border-bottom:1px solid #f3f4f6}
+.i-tbl tbody td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.i-tbl tfoot td{padding:11px 10px;font-size:13.5px;font-weight:700}
+.i-tbl tfoot td:last-child{text-align:right;color:var(--navy);font-variant-numeric:tabular-nums}
+.i-total{background:#f5f3eb}
+.i-pay{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:13px 15px;margin-bottom:14px}
+.i-pr{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0;border-bottom:1px solid #f3f4f6}
+.i-pr:last-child{border-bottom:none}
+.i-pl{color:#6b7280}
+.i-pv{font-weight:600;font-variant-numeric:tabular-nums}
+.i-bal{display:flex;justify-content:space-between;font-size:13px;font-weight:700;padding-top:9px;border-top:1px solid #e5e7eb;margin-top:2px}
+.i-pout{display:flex;justify-content:space-between;align-items:center;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 15px;margin-bottom:16px}
+.i-pout-l{font-size:11px;font-weight:700;color:#166534}
+.i-pout-d{font-size:11px;color:#166534;margin-top:2px}
+.i-pout-a{font-size:17px;font-weight:700;color:var(--ok);font-variant-numeric:tabular-nums}
+.i-status-row{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid #e5e7eb}
+.i-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700}
+.i-pill::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ip-ok{background:var(--ok-bg);color:var(--ok)}.ip-ok::before{background:var(--ok)}
+.ip-err{background:var(--err-bg);color:var(--err)}.ip-err::before{background:var(--err)}
+.ip-info{background:var(--info-bg);color:var(--info)}.ip-info::before{background:var(--info)}
+.ip-purple{background:var(--purple-bg);color:var(--purple)}.ip-purple::before{background:var(--purple)}
+.ip-amber{background:var(--amber-bg);color:var(--amber)}.ip-amber::before{background:var(--amber)}
+.i-note{font-size:10.5px;color:#9ca3af;text-align:right;line-height:1.6}
+.inv-foot{background:#f9fafb;border-top:1px solid #e5e7eb;padding:14px 36px;display:flex;justify-content:space-between;align-items:center;border-radius:0 0 8px 8px}
+.inv-foot-co{font-size:11px;color:#9ca3af;line-height:1.8}
+.inv-foot-co strong{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:1px}
+.seal{width:48px;height:48px;border:2px solid var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:.25;font-size:7.5px;font-weight:700;color:var(--navy);text-align:center;line-height:1.4}
+/* toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:#111;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;display:none}
+.toast.show{display:block}
+@media print{.inv-ov,.inv-bar{display:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-l">JOINCOM CHINA LIMITED · 聚客中国有限公司</div>
+  <div class="topbar-r"><span>Hong Kong Office</span><span>薪酬管理台账</span></div>
+</div>
+<div class="hdr">
+  <div class="brand">
+    <div class="brand-mark">JC</div>
+    <div><div class="brand-name">JOINCOM</div><div class="brand-sub">薪酬管理台账</div></div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sb">
+    <div class="sb-lbl">合作伙伴</div>
+    <div id="plist"></div>
+    <div class="sb-sep"></div>
+    <button class="btn-np" id="btn-np">+ 新增合作伙伴</button>
+  </aside>
+  <div class="main">
+    <div class="pg-head">
+      <div>
+        <div class="pg-title" id="pg-title">合作伙伴台账</div>
+        <div class="pg-sub" id="pg-sub">正在加载数据…</div>
+      </div>
+      <button class="btn btn-dark" id="btn-add-rec">+ 新增月份</button>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="pstrip" id="pstrip"></div>
+    <div class="lcard">
+      <div class="lcard-head">
+        <div><span class="lcard-title">月度台账</span><span class="lcard-hint" id="rec-cnt" style="margin-left:8px;color:var(--t2);font-size:12px;font-weight:400"></span></div>
+        <span class="lcard-hint">最新月份在最前 · 点击行编辑 · 📄 生成结算单</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>
+            <th class="la">所属期</th><th>薪资基数</th><th>MPF雇主</th><th>MPF雇员</th>
+            <th>劳工险</th><th>管理费</th><th>应收</th><th>实收</th>
+            <th>差异</th><th>净发</th><th>收款日</th><th>状态</th><th class="la">备注</th><th class="ctr">账单</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- record modal -->
+<div class="overlay" id="rec-modal">
+<div class="modal">
+  <div class="m-head"><span class="m-title" id="m-title">新增月度记录</span><button class="m-x" id="m-close">×</button></div>
+  <form id="rec-form">
+  <div class="m-body">
+    <div class="fs"><div class="fs-title">基本信息</div>
+      <div class="fg2">
+        <div class="fg"><label class="f-lbl">所属期</label><input class="f-in" type="month" id="f-period" required></div>
+        <div class="fg"><label class="f-lbl">薪资基数 HKD</label><input class="f-in" type="number" id="f-salary" step="0.01" required></div>
+      </div>
+    </div>
+    <div class="fs"><div class="fs-title">代缴项目</div>
+      <div class="fg2">
+        <div class="fg"><label class="f-lbl">MPF 雇主</label><input class="f-in" type="number" id="f-mpfe" step="0.01" value="1500"></div>
+        <div class="fg"><label class="f-lbl">MPF 雇员</label><input class="f-in" type="number" id="f-mpfp" step="0.01" value="1500"></div>
+        <div class="fg"><label class="f-lbl">劳工险</label><input class="f-in" type="number" id="f-ins" step="0.01"></div>
+        <div class="fg"><label class="f-lbl">管理费</label><input class="f-in" type="number" id="f-sfee" step="0.01"></div>
+        <div class="fg"><label class="f-lbl">应收（自动）</label><input class="f-in" type="number" id="f-due" readonly></div>
+        <div class="fg"><label class="f-lbl">净发（自动）</label><input class="f-in" type="number" id="f-net" readonly></div>
+      </div>
+    </div>
+    <div class="fs"><div class="fs-title">收款信息</div>
+      <div class="fg2">
+        <div class="fg s2"><label class="f-lbl">收款货币</label>
+          <div class="ccy-sw"><button type="button" class="on" data-c="HKD">HKD 港币</button><button type="button" data-c="CNY">CNY 人民币</button></div>
+        </div>
+        <div class="fg" id="hkd-grp"><label class="f-lbl">实收 HKD</label><input class="f-in" type="number" id="f-recv" step="0.01"></div>
+        <div class="cny-row" id="cny-row">
+          <div class="fg"><label class="f-lbl">CNY 金额</label><input class="f-in" type="number" id="f-cny" step="0.01"></div>
+          <div class="fg"><label class="f-lbl">汇率 1HKD=?CNY</label><input class="f-in" type="number" id="f-rate" step="0.0001" placeholder="如0.875"></div>
+          <div class="fg"><label class="f-lbl">HKD等值（自动）</label><input class="f-in" type="number" id="f-hkdeq" readonly></div>
+        </div>
+        <div class="fg"><label class="f-lbl">差异（自动）</label><input class="f-in" type="number" id="f-var" readonly><span class="f-hint" id="f-var-hint"></span></div>
+        <div class="fg"><label class="f-lbl">收款日期</label><input class="f-in" type="date" id="f-date"></div>
+        <div class="fg"><label class="f-lbl">状态</label>
+          <select class="f-in" id="f-status">
+            <option value="待收款">待收款</option><option value="已完成">已完成</option>
+            <option value="差额待追">差额待追</option><option value="预付有余">预付有余</option><option value="对冲处理">对冲处理</option>
+          </select>
+        </div>
+        <div class="fg s2"><label class="f-lbl">备注</label><textarea class="f-in" id="f-notes" rows="2"></textarea></div>
+      </div>
+    </div>
+  </div>
+  <div class="m-foot">
+    <div class="m-foot-l"><button type="button" class="btn btn-del" id="btn-del" style="display:none">删除</button></div>
+    <button type="button" class="btn btn-ghost" id="btn-cancel">取消</button>
+    <button type="submit" class="btn btn-dark">保存</button>
+  </div>
+  </form>
+</div>
+</div>
+
+<!-- partner modal -->
+<div class="overlay" id="pm-modal">
+<div class="modal">
+  <div class="m-head"><span class="m-title">新增合作伙伴</span><button class="m-x" id="pm-x">×</button></div>
+  <form id="pm-form">
+  <div class="m-body">
+    <div class="fg2">
+      <div class="fg"><label class="f-lbl">姓名</label><input class="f-in" type="text" id="pm-name" required></div>
+      <div class="fg"><label class="f-lbl">公司</label><input class="f-in" type="text" id="pm-co" required></div>
+      <div class="fg"><label class="f-lbl">薪资基数 HKD</label><input class="f-in" type="number" id="pm-sal" required></div>
+      <div class="fg"><label class="f-lbl">联系邮箱（发账单用）</label><input class="f-in" type="email" id="pm-email" placeholder="选填"></div>
+      <div class="fg"><label class="f-lbl">服务开始日期</label><input class="f-in" type="date" id="pm-start" required></div>
+      <div class="fg"><label class="f-lbl">管理费率</label><input class="f-in" type="number" id="pm-sfr" step="0.001" value="0.016"></div>
+      <div class="fg"><label class="f-lbl">MPF费率</label><input class="f-in" type="number" id="pm-mfr" step="0.001" value="0.05"></div>
+      <div class="fg"><label class="f-lbl">劳工险费率</label><input class="f-in" type="number" id="pm-ifr" step="0.0001" value="0.00355"></div>
+    </div>
+  </div>
+  <div class="m-foot">
+    <button type="button" class="btn btn-ghost" id="pm-cancel">取消</button>
+    <button type="submit" class="btn btn-dark">保存</button>
+  </div>
+  </form>
+</div>
+</div>
+
+<!-- invoice overlay -->
+<div class="inv-ov" id="inv-ov">
+  <div class="inv-wrap">
+    <div class="inv-bar">
+      <span class="inv-bar-title">📄 月度结算单</span>
+      <div class="inv-btns">
+        <button class="ib ib-mail" id="ib-mail">✉ 发送邮件</button>
+        <button class="ib ib-print" id="ib-print">⬇ 打印 / 存PDF</button>
+        <button class="ib ib-close" id="ib-close">✕</button>
+      </div>
+    </div>
+    <div class="inv-body" id="inv-body"></div>
+    <div class="inv-foot">
+      <div class="inv-foot-co"><strong>聚客中国有限公司</strong>JOINCOM CHINA LIMITED<br/>中国移动香港（CMHK）一级授权分销商<br/>薪酬管理 · 强积金代缴 · 劳工险代办</div>
+      <div class="seal">JOINCOM<br/>聚客<br/>中国</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+var KEY = 'jc_ledger_v1';
+
+var SEED = {
+  partners:[{
+    id:'P001', name:'张中梁', company:'Joincom HK', email:'',
+    base_salary:100000, sfr:0.016, mfr:0.05, ifr:0.00355, start:'2025-06-01'
+  }],
+  ledger:[
+    {id:'r2506',pid:'P001',period:'2025-06',salary:50000,mpfe:1500,mpfp:0,ins:177.44,sfee:1187.68,due:52865.12,recv:51677.44,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:1187.68,net:50000,date:'2025-07-05',status:'对冲处理',notes:'Jun首月MPF雇员免缴；管理费$1,187.68与后续月份对冲处理'},
+    {id:'r2507',pid:'P001',period:'2025-07',salary:50000,mpfe:1500,mpfp:1500,ins:177.44,sfee:1210.18,due:52887.62,recv:52887.62,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:48500,date:'2025-08-05',status:'已完成',notes:''},
+    {id:'r2508',pid:'P001',period:'2025-08',salary:50000,mpfe:1500,mpfp:1500,ins:177.44,sfee:1210.18,due:52887.62,recv:52887.62,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:48500,date:'2025-09-05',status:'已完成',notes:''},
+    {id:'r2509',pid:'P001',period:'2025-09',salary:50000,mpfe:1500,mpfp:1500,ins:177.44,sfee:1210.18,due:52887.62,recv:52887.62,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:48500,date:'2025-10-05',status:'已完成',notes:'10/23收HKD 158,662.86；预付10月+11月；余额$2,274.04转抵'},
+    {id:'r2510',pid:'P001',period:'2025-10',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:-2274.04,net:98500,date:'2025-11-05',status:'预付有余',notes:'薪资调整至$100,000；Sep预付余额$2,274.04已抵扣'},
+    {id:'r2511',pid:'P001',period:'2025-11',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:98500,date:'2025-12-05',status:'已完成',notes:''},
+    {id:'r2512',pid:'P001',period:'2025-12',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:98500,date:'2026-01-05',status:'已完成',notes:''},
+    {id:'r2601',pid:'P001',period:'2026-01',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:98500,date:'2026-02-05',status:'已完成',notes:''},
+    {id:'r2602',pid:'P001',period:'2026-02',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:98500,date:'2026-03-05',status:'已完成',notes:''},
+    {id:'r2603',pid:'P001',period:'2026-03',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:102868.90,ccy:'CNY',cny:90000,rate:0.875,hkdeq:102868.90,vari:632.30,net:98500,date:'2026-04-05',status:'差额待追',notes:'CNY付款：¥90,000，按2026-04-09汇率折算HKD 102,868.90；差额HKD 632.30本月补齐'}
+  ]
+};
+
+// ── load data ──
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw){
+      var d = JSON.parse(raw);
+      if(d && d.partners && d.partners.length > 0) return d;
+    }
+  }catch(e){}
+  var fresh = JSON.parse(JSON.stringify(SEED));
+  try{ localStorage.setItem(KEY, JSON.stringify(fresh)); }catch(e){}
+  return fresh;
+}
+function save(d){ try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){} }
+
+// ── helpers ──
+function esc(v){ return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(n,d){ d=d||2; if(n===null||n===undefined||isNaN(n)) return '—'; return Number(n).toLocaleString('en-HK',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function fmtPer(p){ if(!p) return '—'; var parts=p.split('-'); var ms=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return ms[parseInt(parts[1])-1]+'-'+parts[0].slice(2); }
+function fmtPerLong(p){ if(!p) return '—'; var parts=p.split('-'); var ms=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']; return parts[0]+'年'+ms[parseInt(parts[1])-1]; }
+function invNo(p){ return 'JC-'+(p||'').replace('-',''); }
+function todayStr(){ var d=new Date(); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'; }
+function pillCls(s){ return {'已完成':'p-ok','差额待追':'p-err','预付有余':'p-info','对冲处理':'p-purple','待收款':'p-amber'}[s]||'p-amber'; }
+function rowCls(s){ return {'已完成':'r-ok','差额待追':'r-err','预付有余':'r-info','对冲处理':'r-purple','待收款':'r-amber'}[s]||'r-amber'; }
+function iPillCls(s){ return {'已完成':'ip-ok','差额待追':'ip-err','预付有余':'ip-info','对冲处理':'ip-purple','待收款':'ip-amber'}[s]||'ip-amber'; }
+function autoStatus(due,recv,v){ if(!recv) return '待收款'; if(Math.abs(v)<0.01) return '已完成'; return v>0?'差额待追':'预付有余'; }
+
+var D = load();
+var selPid = D.partners[0] ? D.partners[0].id : null;
+var editId = null;
+var ccy = 'HKD';
+
+function getLedger(){ return D.ledger.filter(function(r){return r.pid===selPid;}).sort(function(a,b){return b.period.localeCompare(a.period);}); }
+
+// ── render partners ──
+function renderPartners(){
+  var html = D.partners.map(function(p){
+    return '<div class="pi'+(p.id===selPid?' on':'')+'" data-id="'+esc(p.id)+'">'
+      +'<div class="pi-av">'+esc(p.name[0])+'</div>'
+      +'<div style="flex:1;min-width:0"><div class="pi-name">'+esc(p.name)+'</div><div class="pi-co">'+esc(p.company)+'</div></div>'
+      +'<div class="pi-dot"></div></div>';
+  }).join('');
+  document.getElementById('plist').innerHTML = html;
+  document.querySelectorAll('.pi').forEach(function(el){
+    el.addEventListener('click', function(){ selPid=el.dataset.id; renderAll(); });
+  });
+}
+
+// ── render stats ──
+function renderStats(){
+  var recs = getLedger();
+  var tDue=0,tRecv=0,tSfee=0,tNet=0,tDiff=0;
+  recs.forEach(function(r){ tDue+=Number(r.due||0); tRecv+=Number(r.recv||0); tSfee+=Number(r.sfee||0); tNet+=Number(r.net||0); if(r.status==='差额待追') tDiff+=Number(r.vari||0); });
+  document.getElementById('stats').innerHTML =
+    '<div class="sc ck"><div class="sc-lbl">累计应收</div><div class="sc-val">HK$'+fmt(tDue,0)+'</div><div class="sc-sub">'+recs.length+' 个服务月</div></div>'
+    +'<div class="sc cg"><div class="sc-lbl">累计实收</div><div class="sc-val ok">HK$'+fmt(tRecv,0)+'</div><div class="sc-sub">含MPF+险+管理费</div></div>'
+    +'<div class="sc cb"><div class="sc-lbl">累计管理费</div><div class="sc-val">HK$'+fmt(tSfee,0)+'</div><div class="sc-sub">JOINCOM管理收入</div></div>'
+    +'<div class="sc cp"><div class="sc-lbl">累计净发薪资</div><div class="sc-val">HK$'+fmt(tNet,0)+'</div><div class="sc-sub">扣MPF雇员后实发</div></div>'
+    +'<div class="sc '+(tDiff>0?'cr':'cg')+'"><div class="sc-lbl">当前差额</div><div class="sc-val '+(tDiff>0?'err':'ok')+'">'+(tDiff>0?'HK$'+fmt(tDiff):'已清零')+'</div><div class="sc-sub">'+(tDiff>0?'差额待追':'账目平衡')+'</div></div>';
+}
+
+// ── render profile strip ──
+function renderProfile(){
+  var p = D.partners.filter(function(x){return x.id===selPid;})[0];
+  var el = document.getElementById('pstrip');
+  if(!p){ el.classList.remove('show'); document.getElementById('pg-title').textContent='薪酬管理台账'; document.getElementById('pg-sub').textContent='选择左侧合作伙伴'; return; }
+  el.classList.add('show');
+  document.getElementById('pg-title').textContent = p.name+' — 月度台账';
+  document.getElementById('pg-sub').textContent = p.company+' · 服务开始 '+p.start;
+  el.innerHTML = '<div class="pf"><div class="pf-lbl">姓名</div><div class="pf-val">'+esc(p.name)+'</div></div><div class="pf-sep"></div>'
+    +'<div class="pf"><div class="pf-lbl">公司</div><div class="pf-val">'+esc(p.company)+'</div></div><div class="pf-sep"></div>'
+    +'<div class="pf"><div class="pf-lbl">当前薪资基数</div><div class="pf-val">HK$'+fmt(p.base_salary,0)+'</div></div><div class="pf-sep"></div>'
+    +'<div class="pf"><div class="pf-lbl">服务开始</div><div class="pf-val">'+esc(p.start)+'</div></div><div class="pf-sep"></div>'
+    +'<div class="pf"><div class="pf-lbl">管理费率</div><div class="pf-val">'+(p.sfr*100).toFixed(1)+'%</div></div>';
+}
+
+// ── render ledger ──
+function renderLedger(){
+  var recs = getLedger();
+  document.getElementById('rec-cnt').textContent = recs.length ? recs.length+' 条记录' : '';
+  var body = document.getElementById('tbody');
+  if(!recs.length){ body.innerHTML='<tr><td colspan="14" class="empty">暂无台账记录，点击「新增月份」添加</td></tr>'; return; }
+  body.innerHTML = recs.map(function(r){
+    return '<tr class="'+rowCls(r.status)+'" data-id="'+esc(r.id)+'">'
+      +'<td class="pcell la">'+fmtPer(r.period)+'</td>'
+      +'<td>'+fmt(r.salary,0)+'</td>'
+      +'<td>'+fmt(r.mpfe,0)+'</td>'
+      +'<td class="'+(r.mpfp===0?'dim':'')+'">'+(r.mpfp===0?'— 首月':fmt(r.mpfp,0))+'</td>'
+      +'<td>'+fmt(r.ins)+'</td>'
+      +'<td>'+fmt(r.sfee)+'</td>'
+      +'<td>'+fmt(r.due)+'</td>'
+      +'<td>'+fmt(r.recv)+(r.ccy==='CNY'?'<span class="cny-tag">CNY</span>':'')+'</td>'
+      +'<td class="'+(r.vari>0?'vp':r.vari<0?'vn':'vz')+'">'+(r.vari===0?'—':r.vari>0?'▲'+fmt(r.vari):'▼'+fmt(Math.abs(r.vari)))+'</td>'
+      +'<td>'+fmt(r.net,0)+'</td>'
+      +'<td class="dim" style="font-size:12px">'+(r.date||'—')+'</td>'
+      +'<td><span class="pill '+pillCls(r.status)+'">'+esc(r.status)+'</span></td>'
+      +'<td class="note-cell la" title="'+esc(r.notes)+'">'+(esc(r.notes)||'—')+'</td>'
+      +'<td class="ctr"><button class="btn-inv" data-inv="'+esc(r.id)+'">📄 账单</button></td>'
+      +'</tr>';
+  }).join('');
+  body.querySelectorAll('tr[data-id]').forEach(function(row){
+    row.addEventListener('click', function(e){ if(!e.target.classList.contains('btn-inv')) openEdit(row.dataset.id); });
+  });
+  body.querySelectorAll('.btn-inv').forEach(function(btn){
+    btn.addEventListener('click', function(e){ e.stopPropagation(); openInvoice(btn.dataset.inv); });
+  });
+}
+
+function renderAll(){ renderPartners(); renderStats(); renderProfile(); renderLedger(); }
+
+// ── form calc ──
+function calcForm(){
+  var s=parseFloat(document.getElementById('f-salary').value)||0;
+  var me=parseFloat(document.getElementById('f-mpfe').value)||0;
+  var mp=parseFloat(document.getElementById('f-mpfp').value)||0;
+  var ins=parseFloat(document.getElementById('f-ins').value)||0;
+  var sf=parseFloat(document.getElementById('f-sfee').value)||0;
+  var due=s+me+ins+sf;
+  var net=s-mp;
+  document.getElementById('f-due').value=due.toFixed(2);
+  document.getElementById('f-net').value=net.toFixed(2);
+  if(ccy==='CNY'){
+    var cn=parseFloat(document.getElementById('f-cny').value)||0;
+    var rt=parseFloat(document.getElementById('f-rate').value)||0;
+    if(cn&&rt){ var eq=cn/rt; document.getElementById('f-hkdeq').value=eq.toFixed(2); document.getElementById('f-recv').value=eq.toFixed(2); }
+  }
+  var recv=parseFloat(document.getElementById('f-recv').value)||0;
+  var v=parseFloat((due-recv).toFixed(2));
+  document.getElementById('f-var').value=v.toFixed(2);
+  var hint=document.getElementById('f-var-hint');
+  if(v>0.01){hint.textContent='差额待追';hint.style.color='var(--err)';}
+  else if(v<-0.01){hint.textContent='预付有余';hint.style.color='var(--info)';}
+  else{hint.textContent='已平账 ✓';hint.style.color='var(--ok)';}
+  document.getElementById('f-status').value=autoStatus(due,recv,v);
+}
+
+function setCcy(c){
+  ccy=c;
+  document.querySelectorAll('.ccy-sw button').forEach(function(b){b.classList.toggle('on',b.dataset.c===c);});
+  document.getElementById('cny-row').classList.toggle('show',c==='CNY');
+  document.getElementById('hkd-grp').style.display=c==='CNY'?'none':'';
+  calcForm();
+}
+
+['f-salary','f-mpfe','f-mpfp','f-ins','f-sfee','f-recv','f-cny','f-rate'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',calcForm);
+});
+document.querySelector('.ccy-sw').addEventListener('click',function(e){if(e.target.dataset.c) setCcy(e.target.dataset.c);});
+
+// ── open/close record modal ──
+function openAdd(){
+  if(!selPid){alert('请先选择合作伙伴');return;}
+  editId=null;
+  document.getElementById('m-title').textContent='新增月度记录';
+  document.getElementById('btn-del').style.display='none';
+  document.getElementById('rec-form').reset();
+  var p=D.partners.filter(function(x){return x.id===selPid;})[0];
+  if(p){ document.getElementById('f-salary').value=p.base_salary; document.getElementById('f-ins').value=(p.base_salary*p.ifr).toFixed(2); document.getElementById('f-sfee').value=(p.base_salary*p.sfr).toFixed(2); }
+  var recs=D.ledger.filter(function(r){return r.pid===selPid;}).sort(function(a,b){return b.period.localeCompare(a.period);});
+  if(recs.length){var parts=recs[0].period.split('-').map(Number);var nm=parts[1]===12?1:parts[1]+1;var ny=parts[1]===12?parts[0]+1:parts[0];document.getElementById('f-period').value=ny+'-'+String(nm).padStart(2,'0');}
+  else{var n=new Date();document.getElementById('f-period').value=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');}
+  setCcy('HKD'); calcForm();
+  document.getElementById('rec-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function openEdit(rid){
+  var r=D.ledger.filter(function(x){return x.id===rid;})[0]; if(!r) return;
+  editId=rid;
+  document.getElementById('m-title').textContent='编辑月度记录';
+  document.getElementById('btn-del').style.display='';
+  document.getElementById('f-period').value=r.period;
+  document.getElementById('f-salary').value=r.salary;
+  document.getElementById('f-mpfe').value=r.mpfe;
+  document.getElementById('f-mpfp').value=r.mpfp;
+  document.getElementById('f-ins').value=r.ins;
+  document.getElementById('f-sfee').value=r.sfee;
+  document.getElementById('f-due').value=r.due;
+  document.getElementById('f-net').value=r.net;
+  document.getElementById('f-date').value=r.date||'';
+  document.getElementById('f-status').value=r.status;
+  document.getElementById('f-notes').value=r.notes||'';
+  setCcy(r.ccy||'HKD');
+  if(r.ccy==='CNY'){ document.getElementById('f-cny').value=r.cny||''; document.getElementById('f-rate').value=r.rate||''; document.getElementById('f-hkdeq').value=r.hkdeq||''; }
+  document.getElementById('f-recv').value=r.recv||'';
+  document.getElementById('f-var').value=r.vari;
+  document.getElementById('rec-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeRec(){ document.getElementById('rec-modal').classList.remove('open'); document.body.style.overflow=''; editId=null; }
+
+document.getElementById('rec-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  var p=D.partners.filter(function(x){return x.id===selPid;})[0]; if(!p){alert('请选择伙伴');return;}
+  var period=document.getElementById('f-period').value;
+  var rec={
+    id: editId||('r'+period.replace('-','')+'x'+Date.now().toString().slice(-3)),
+    pid:selPid, period:period,
+    salary:parseFloat(document.getElementById('f-salary').value)||0,
+    mpfe:parseFloat(document.getElementById('f-mpfe').value)||0,
+    mpfp:parseFloat(document.getElementById('f-mpfp').value)||0,
+    ins:parseFloat(document.getElementById('f-ins').value)||0,
+    sfee:parseFloat(document.getElementById('f-sfee').value)||0,
+    due:parseFloat(document.getElementById('f-due').value)||0,
+    net:parseFloat(document.getElementById('f-net').value)||0,
+    recv:parseFloat(document.getElementById('f-recv').value)||0,
+    vari:parseFloat(document.getElementById('f-var').value)||0,
+    ccy:ccy,
+    cny:ccy==='CNY'?parseFloat(document.getElementById('f-cny').value)||null:null,
+    rate:ccy==='CNY'?parseFloat(document.getElementById('f-rate').value)||null:null,
+    hkdeq:ccy==='CNY'?parseFloat(document.getElementById('f-hkdeq').value)||null:null,
+    date:document.getElementById('f-date').value,
+    status:document.getElementById('f-status').value,
+    notes:document.getElementById('f-notes').value.trim()
+  };
+  if(editId){ var idx=D.ledger.findIndex(function(x){return x.id===editId;}); if(idx>=0) D.ledger[idx]=rec; }
+  else{
+    if(D.ledger.some(function(x){return x.pid===selPid&&x.period===period;})){ alert('该月份已有记录'); return; }
+    D.ledger.push(rec);
+  }
+  save(D); closeRec(); renderAll();
+});
+
+document.getElementById('btn-del').addEventListener('click',function(){
+  if(!editId||!confirm('确定删除？')) return;
+  D.ledger=D.ledger.filter(function(x){return x.id!==editId;}); save(D); closeRec(); renderAll();
+});
+document.getElementById('btn-add-rec').addEventListener('click',openAdd);
+document.getElementById('m-close').addEventListener('click',closeRec);
+document.getElementById('btn-cancel').addEventListener('click',closeRec);
+document.getElementById('rec-modal').addEventListener('click',function(e){if(e.target===this)closeRec();});
+
+// ── partner modal ──
+function openPM(){ document.getElementById('pm-modal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closePM(){ document.getElementById('pm-modal').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('btn-np').addEventListener('click',openPM);
+document.getElementById('pm-x').addEventListener('click',closePM);
+document.getElementById('pm-cancel').addEventListener('click',closePM);
+document.getElementById('pm-modal').addEventListener('click',function(e){if(e.target===this)closePM();});
+document.getElementById('pm-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  var id='P'+String(D.partners.length+1).padStart(3,'0');
+  D.partners.push({id:id,name:document.getElementById('pm-name').value.trim(),company:document.getElementById('pm-co').value.trim(),email:document.getElementById('pm-email').value.trim(),base_salary:parseFloat(document.getElementById('pm-sal').value)||0,sfr:parseFloat(document.getElementById('pm-sfr').value)||0.016,mfr:parseFloat(document.getElementById('pm-mfr').value)||0.05,ifr:parseFloat(document.getElementById('pm-ifr').value)||0.00355,start:document.getElementById('pm-start').value});
+  selPid=id; save(D); closePM(); renderAll();
+});
+
+// ── invoice overlay ──
+function openInvoice(rid){
+  var r=D.ledger.filter(function(x){return x.id===rid;})[0]; if(!r) return;
+  var partner=D.partners.filter(function(x){return x.id===r.pid;})[0]; if(!partner) return;
+  var due=Number(r.due)||0, recv=Number(r.recv)||0, bal=due-recv;
+  var isOk=Math.abs(bal)<0.01, isCredit=bal<-0.01;
+  var payLine = recv>0
+    ? (r.ccy==='CNY'
+        ? 'CNY ¥'+fmt(r.cny,0)+' @ '+r.rate+' → HKD '+fmt(r.hkdeq)
+        : 'HKD '+fmt(recv))
+    : '暂无付款记录';
+  document.getElementById('inv-body').innerHTML =
+    '<div class="i-head">'
+      +'<div><div class="i-co-name">聚客中国有限公司</div><div class="i-co-en">JOINCOM CHINA LIMITED</div><div class="i-co-tag">综合人力资源服务</div></div>'
+      +'<div class="i-meta"><div class="i-meta-lbl">Monthly Statement</div><div class="i-meta-no">'+invNo(r.period)+'</div><div class="i-meta-date">出单日期：'+todayStr()+'</div></div>'
+    +'</div>'
+    +'<div class="i-gold"></div>'
+    +'<div class="i-parties">'
+      +'<div><div class="i-p-lbl">收件方</div><div class="i-p-name">'+esc(partner.name)+' 先生</div><div class="i-p-det">'+esc(partner.company)+'</div><div class="i-badge">服务期：'+fmtPerLong(r.period)+'</div></div>'
+      +'<div><div class="i-p-lbl">服务方</div><div class="i-p-name">聚客中国有限公司</div><div class="i-p-det">JOINCOM CHINA LIMITED<br>CMHK一级分销商<br>综合人力资源服务提供方</div></div>'
+    +'</div>'
+    +'<div class="i-sec">服务明细</div>'
+    +'<table class="i-tbl"><thead><tr><th>服务项目</th><th>说明</th><th>金额 HKD</th></tr></thead><tbody>'
+      +'<tr><td>薪酬代管</td><td style="font-size:11.5px;color:#9ca3af">基本薪资（税前）</td><td>'+fmt(r.salary,0)+'</td></tr>'
+      +'<tr><td>强积金（雇主供款）</td><td style="font-size:11.5px;color:#9ca3af">MPF Employer</td><td>'+fmt(r.mpfe,0)+'</td></tr>'
+      +'<tr><td>强积金（雇员代扣）</td><td style="font-size:11.5px;color:#9ca3af">MPF Employee'+(r.mpfp===0?' · 首月免缴':'')+'</td><td>'+(r.mpfp===0?'—':fmt(r.mpfp,0))+'</td></tr>'
+      +'<tr><td>劳工强制保险</td><td style="font-size:11.5px;color:#9ca3af">Employees Compensation</td><td>'+fmt(r.ins)+'</td></tr>'
+      +'<tr><td>综合管理费</td><td style="font-size:11.5px;color:#9ca3af">Management Fee</td><td>'+fmt(r.sfee)+'</td></tr>'
+    +'</tbody><tfoot><tr class="i-total"><td colspan="2" style="color:var(--navy)">应付总额</td><td>'+fmt(due)+'</td></tr></tfoot></table>'
+    +'<div class="i-sec">收款记录</div>'
+    +'<div class="i-pay">'
+      +'<div class="i-pr"><span class="i-pl">'+(r.date||'—')+'</span><span class="i-pv">'+payLine+'</span></div>'
+      +'<div class="i-bal"><span style="color:#6b7280;font-weight:400">实收合计</span><span style="font-variant-numeric:tabular-nums">HKD '+fmt(recv)+'</span></div>'
+      +(!isOk?'<div class="i-bal" style="margin-top:6px;padding-top:6px;border-top:1px solid #e5e7eb"><span>'+(isCredit?'预付余额':'尚欠金额')+'</span><span style="color:'+(isCredit?'var(--ok)':'var(--err)')+'">HKD '+fmt(Math.abs(bal))+'</span></div>':'')
+    +'</div>'
+    +'<div class="i-pout"><div><div class="i-pout-l">薪酬发放（已到账）</div><div class="i-pout-d">每月10日前到账</div></div><div class="i-pout-a">HKD '+fmt(r.net,0)+'</div></div>'
+    +'<div class="i-status-row"><span class="i-pill '+iPillCls(r.status)+'">'+esc(r.status)+'</span><div class="i-note">本账单由 JOINCOM CHINA LIMITED 出具<br>如有疑问请联系您的专属服务顾问</div></div>';
+
+  // mail button
+  var subj = encodeURIComponent('JOINCOM 月度结算单 · '+fmtPerLong(r.period)+' · '+invNo(r.period));
+  var body = encodeURIComponent(partner.name+' 先生，您好！\n\n以下为您 '+fmtPerLong(r.period)+' 的月度结算单，请查收。\n\n账单编号：'+invNo(r.period)+'\n\n【服务明细】\n薪资基数：    HKD '+fmt(r.salary,0)+'\nMPF雇主：    HKD '+fmt(r.mpfe,0)+'\nMPF雇员：    '+(r.mpfp===0?'— 首月免缴':'HKD '+fmt(r.mpfp,0))+'\n劳工险：     HKD '+fmt(r.ins)+'\n综合管理费：  HKD '+fmt(r.sfee)+'\n应付总额：    HKD '+fmt(due)+'\n\n【收款情况】\n'+payLine+'\n实收：HKD '+fmt(recv)+'\n'+(isOk?'账目已结清 ✓':(isCredit?'预付余额：HKD '+fmt(Math.abs(bal)):'尚欠：HKD '+fmt(Math.abs(bal))))+'\n\n【薪资发放】\n净薪资：HKD '+fmt(r.net,0)+'（每月10日前到账）\n\n聚客中国有限公司（JOINCOM CHINA LIMITED）\n如有疑问请回复此邮件。');
+  var email = partner.email||'';
+  var mailBtn = document.getElementById('ib-mail');
+  if(email){
+    mailBtn.textContent = '✉ 发给 '+partner.name;
+    mailBtn.onclick = function(){ window.location.href='mailto:'+email+'?subject='+subj+'&body='+body; };
+  } else {
+    mailBtn.textContent = '✉ 输入邮箱发送';
+    mailBtn.onclick = function(){
+      var addr=prompt('请输入'+partner.name+'的邮箱：');
+      if(addr&&addr.indexOf('@')>0){ partner.email=addr; save(D); window.location.href='mailto:'+addr+'?subject='+subj+'&body='+body; }
+    };
+  }
+
+  document.getElementById('inv-ov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeInvoice(){ document.getElementById('inv-ov').classList.remove('open'); document.body.style.overflow=''; }
+
+document.getElementById('ib-close').addEventListener('click',closeInvoice);
+document.getElementById('inv-ov').addEventListener('click',function(e){if(e.target===this)closeInvoice();});
+document.getElementById('ib-print').addEventListener('click',function(){
+  var w=window.open('','_blank');
+  var co='<style>body{font-family:system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
+  co+=document.querySelector('style').textContent;
+  co+='</style>';
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>薪酬管理台账 | JOINCOM</title>'+co+'</head><body style="padding:24px">');
+  w.document.write(document.getElementById('inv-body').innerHTML);
+  w.document.write('<div style="margin-top:16px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af">聚客中国有限公司 JOINCOM CHINA LIMITED · CMHK一级授权分销商</div>');
+  w.document.write('</body></html>');
+  w.document.close();
+  setTimeout(function(){w.print();},500);
+});
+
+// toast
+function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3000); }
+
+renderAll();
+
+})();
+</script>
+</body>
+</html>
