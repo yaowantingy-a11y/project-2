@@ -1,699 +1,2367 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>薪酬管理台账 | JOINCOM</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JOINCOM 聚客 · 内部工具导航中心 v1.5</title>
 <style>
-:root{
-  --sb:#0d111b;--sb-muted:#8b98b1;--sb-active:#1e2b45;
-  --bg:#f2f5fb;--card:#fff;--t1:#0d111b;--t2:#6b7a99;
-  --line:#e4e9f4;--line2:#c8d3e8;--navy:#1a2b52;
-  --ok:#059669;--ok-bg:#d1fae5;
-  --err:#dc2626;--err-bg:#fee2e2;
-  --info:#2563eb;--info-bg:#dbeafe;
-  --purple:#7c3aed;--purple-bg:#ede9fe;
-  --amber:#d97706;--amber-bg:#fef3c7;
+/* ============================================================
+   VARIABLES & RESET
+   ============================================================ */
+:root {
+  --primary: #1a56db;
+  --primary-dark: #1340a8;
+  --primary-light: #e8f0fe;
+  --accent: #e02828;
+  --sidebar-bg: #0f172a;
+  --sidebar-hover: rgba(255,255,255,0.07);
+  --sidebar-active-bg: rgba(26,86,219,0.25);
+  --sidebar-active-border: #1a56db;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-bright: #e2e8f0;
+  --sidebar-group: #475569;
+  --sidebar-width: 232px;
+  --topbar-h: 60px;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --border-mid: #cbd5e1;
+  --text: #0f172a;
+  --text-2: #475569;
+  --text-3: #94a3b8;
+  --green: #059669;
+  --green-bg: #d1fae5;
+  --yellow: #d97706;
+  --yellow-bg: #fef3c7;
+  --red: #dc2626;
+  --red-bg: #fee2e2;
+  --blue: #2563eb;
+  --blue-bg: #dbeafe;
+  --purple: #7c3aed;
+  --purple-bg: #ede9fe;
+  --orange: #ea580c;
+  --orange-bg: #ffedd5;
+  --gray: #6b7280;
+  --gray-bg: #f3f4f6;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+  --r: 10px;
+  --r-sm: 6px;
+  /* Admin mode indicator */
+  --admin-accent: #7c3aed;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Plus Jakarta Sans',-apple-system,'PingFang SC',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased}
-.topbar{background:var(--sb);padding:7px 24px;display:flex;align-items:center;justify-content:space-between}
-.topbar-l{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.45)}
-.topbar-r{display:flex;gap:16px;font-size:11px;color:rgba(255,255,255,.3)}
-.hdr{background:#fff;border-bottom:1px solid var(--line);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
-.brand-mark{width:36px;height:36px;background:var(--navy);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
-.brand-name{font-size:15px;font-weight:700}
-.brand-sub{font-size:11.5px;color:var(--t2)}
-.shell{display:grid;grid-template-columns:252px 1fr;height:calc(100vh - 95px)}
-/* sidebar */
-.sb{background:var(--sb);padding:20px 12px;overflow-y:auto}
-.sb-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sb-muted);padding:0 8px 10px}
-.pi{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;margin-bottom:2px}
-.pi:hover{background:rgba(255,255,255,.05)}
-.pi.on{background:var(--sb-active)}
-.pi-av{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
-.pi.on .pi-av{background:#2563eb}
-.pi-name{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pi-co{font-size:11px;color:var(--sb-muted);margin-top:1px}
-.pi-dot{width:6px;height:6px;border-radius:50%;background:var(--ok);flex-shrink:0}
-.sb-sep{height:1px;background:rgba(255,255,255,.07);margin:12px 0}
-.btn-np{display:flex;align-items:center;gap:7px;width:100%;padding:9px 12px;border:1.5px dashed rgba(139,152,177,.28);border-radius:10px;background:transparent;color:var(--sb-muted);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
-.btn-np:hover{border-color:rgba(139,152,177,.6);color:#fff}
-/* main */
-.main{padding:24px 28px;overflow-y:auto}
-.pg-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
-.pg-title{font-size:19px;font-weight:700;letter-spacing:-.025em}
-.pg-sub{font-size:12.5px;color:var(--t2);margin-top:3px}
-/* stats */
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:18px}
-.sc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
-.sc::after{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;border-radius:12px 0 0 12px}
-.ck::after{background:var(--line2)}.cg::after{background:var(--ok)}.cb::after{background:var(--info)}.cp::after{background:var(--purple)}.cr::after{background:var(--err)}
-.sc-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t2);margin-bottom:9px}
-.sc-val{font-size:17px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
-.sc-val.ok{color:var(--ok)}.sc-val.err{color:var(--err)}
-.sc-sub{font-size:11px;color:var(--t2);margin-top:5px}
-/* profile */
-.pstrip{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 20px;margin-bottom:16px;display:none;align-items:center;flex-wrap:wrap}
-.pstrip.show{display:flex}
-.pf{padding:0 18px}.pf:first-child{padding-left:4px}
-.pf-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--t2);margin-bottom:4px}
-.pf-val{font-size:13px;font-weight:600}
-.pf-sep{width:1px;height:34px;background:var(--line);flex-shrink:0}
-/* table card */
-.lcard{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.lcard-head{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line)}
-.lcard-title{font-size:14px;font-weight:700}
-.lcard-hint{font-size:11px;color:var(--t2)}
-.tbl-wrap{overflow-x:auto;max-height:520px;overflow-y:auto}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-thead th{position:sticky;top:0;z-index:2;background:#f7f9fd;border-bottom:1px solid var(--line);padding:10px 11px;text-align:right;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t2);white-space:nowrap}
-thead th:first-child,thead th.la{text-align:left;padding-left:18px}
-thead th.ctr{text-align:center}
-tbody tr{cursor:pointer;border-left:3px solid transparent}
-tbody tr:hover{background:#f7f9fd}
-tbody tr:not(:last-child) td{border-bottom:1px solid var(--line)}
-td{padding:11px 11px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-td:first-child,td.la{text-align:left;padding-left:18px}
-td.ctr{text-align:center}
-.r-ok{border-left-color:var(--ok)}.r-err{border-left-color:var(--err)}.r-info{border-left-color:var(--info)}.r-purple{border-left-color:var(--purple)}.r-amber{border-left-color:var(--amber)}
-.pcell{font-weight:700;font-size:13px}
-.dim{color:var(--t2)}.vp{color:var(--err);font-weight:700}.vn{color:var(--info);font-weight:700}.vz{color:var(--t2)}
-.cny-tag{font-size:9.5px;padding:1px 5px;border-radius:4px;background:var(--amber-bg);color:#92400e;font-weight:700;margin-left:5px;vertical-align:middle}
-.pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700}
-.pill::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.p-ok{background:var(--ok-bg);color:var(--ok)}.p-ok::before{background:var(--ok)}
-.p-err{background:var(--err-bg);color:var(--err)}.p-err::before{background:var(--err)}
-.p-info{background:var(--info-bg);color:var(--info)}.p-info::before{background:var(--info)}
-.p-purple{background:var(--purple-bg);color:var(--purple)}.p-purple::before{background:var(--purple)}
-.p-amber{background:var(--amber-bg);color:var(--amber)}.p-amber::before{background:var(--amber)}
-.note-cell{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t2);font-size:11.5px}
-.empty{padding:48px 20px;text-align:center;color:var(--t2);font-size:13px}
-/* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:6px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .12s}
-.btn-dark{background:var(--t1);color:#fff}.btn-dark:hover{background:#1e2b45}
-.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--line)}.btn-ghost:hover{border-color:var(--line2);color:var(--t1)}
-.btn-del{background:transparent;color:var(--err);border:1px solid rgba(220,38,38,.25)}.btn-del:hover{background:var(--err-bg)}
-.btn-inv{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;background:var(--navy);color:#fff;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:inherit}
-.btn-inv:hover{opacity:.8}
-/* modals */
-.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(13,17,27,.6);z-index:1000;display:none;align-items:center;justify-content:center}
-.overlay.open{display:flex}
-.modal{background:#fff;border-radius:16px;width:100%;max-width:600px;max-height:92vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2)}
-.m-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--line)}
-.m-title{font-size:15px;font-weight:700}
-.m-x{width:28px;height:28px;border:none;background:var(--bg);border-radius:6px;cursor:pointer;font-size:17px;color:var(--t2);display:flex;align-items:center;justify-content:center;font-family:inherit}
-.m-x:hover{background:var(--line);color:var(--t1)}
-.m-body{padding:18px 22px}
-.m-foot{padding:0 22px 18px;display:flex;gap:8px;justify-content:flex-end;align-items:center}
-.m-foot-l{margin-right:auto}
-.fs{margin-bottom:16px}
-.fs-title{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:12px}
-.fg2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fg{display:flex;flex-direction:column;gap:5px}
-.fg.s2{grid-column:1/-1}
-.f-lbl{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t2)}
-.f-in{padding:9px 11px;border:1px solid var(--line);border-radius:8px;font-size:13px;color:var(--t1);background:#fff;font-family:inherit}
-.f-in:focus{outline:none;border-color:var(--info);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
-.f-in[readonly]{background:var(--bg);color:var(--t2)}
-.f-hint{font-size:11px;color:var(--t2);margin-top:2px}
-.ccy-sw{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.ccy-sw button{padding:7px 18px;border:none;background:transparent;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--t2);font-family:inherit}
-.ccy-sw button.on{background:var(--t1);color:#fff}
-.cny-row{display:none;grid-column:1/-1}
-.cny-row.show{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-/* invoice overlay */
-.inv-ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(13,17,27,.75);z-index:2000;display:none;align-items:flex-start;justify-content:center;padding:20px 16px;overflow-y:auto}
-.inv-ov.open{display:flex}
-.inv-wrap{background:#fff;width:100%;max-width:680px;border-radius:8px;box-shadow:0 24px 80px rgba(0,0,0,.3);margin:auto}
-.inv-bar{background:var(--navy);padding:11px 18px;display:flex;align-items:center;justify-content:space-between;border-radius:8px 8px 0 0;gap:8px}
-.inv-bar-title{color:rgba(255,255,255,.65);font-size:12.5px}
-.inv-btns{display:flex;gap:8px}
-.ib{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:7px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:inherit}
-.ib-print{background:#fff;color:var(--navy)}
-.ib-print:hover{background:#f0f4ff}
-.ib-mail{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
-.ib-mail:hover{background:rgba(255,255,255,.22)}
-.ib-close{background:transparent;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.15);padding:6px 10px}
-.ib-close:hover{color:#fff}
-/* invoice body */
-.inv-body{padding:28px 36px}
-.i-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
-.i-co-name{font-family:Georgia,serif;font-size:19px;font-weight:700;color:var(--navy)}
-.i-co-en{font-size:10px;color:#9ca3af;letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
-.i-co-tag{display:inline-block;margin-top:8px;padding:3px 9px;background:#f0f4ff;border-radius:4px;font-size:10px;color:var(--navy);font-weight:600}
-.i-meta{text-align:right}
-.i-meta-lbl{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:3px}
-.i-meta-no{font-size:17px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
-.i-meta-date{font-size:11px;color:#9ca3af;margin-top:4px}
-.i-gold{height:2px;background:linear-gradient(90deg,#b8922a,#e8c86a,#b8922a);margin:14px 0}
-.i-parties{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #e5e7eb}
-.i-p-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:5px}
-.i-p-name{font-size:13.5px;font-weight:700;margin-bottom:2px}
-.i-p-det{font-size:11.5px;color:#6b7280;line-height:1.6}
-.i-badge{display:inline-flex;align-items:center;margin-top:6px;padding:3px 9px;background:var(--navy);border-radius:4px;font-size:11px;font-weight:600;color:#fff}
-.i-sec{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af;margin-bottom:8px}
-.i-tbl{width:100%;border-collapse:collapse;margin-bottom:18px}
-.i-tbl thead th{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9ca3af;padding:7px 10px;text-align:left;border-bottom:1.5px solid var(--navy)}
-.i-tbl thead th:last-child{text-align:right}
-.i-tbl tbody td{padding:9px 10px;font-size:12.5px;border-bottom:1px solid #f3f4f6}
-.i-tbl tbody td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
-.i-tbl tfoot td{padding:11px 10px;font-size:13.5px;font-weight:700}
-.i-tbl tfoot td:last-child{text-align:right;color:var(--navy);font-variant-numeric:tabular-nums}
-.i-total{background:#f5f3eb}
-.i-pay{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:13px 15px;margin-bottom:14px}
-.i-pr{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0;border-bottom:1px solid #f3f4f6}
-.i-pr:last-child{border-bottom:none}
-.i-pl{color:#6b7280}
-.i-pv{font-weight:600;font-variant-numeric:tabular-nums}
-.i-bal{display:flex;justify-content:space-between;font-size:13px;font-weight:700;padding-top:9px;border-top:1px solid #e5e7eb;margin-top:2px}
-.i-pout{display:flex;justify-content:space-between;align-items:center;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 15px;margin-bottom:16px}
-.i-pout-l{font-size:11px;font-weight:700;color:#166534}
-.i-pout-d{font-size:11px;color:#166534;margin-top:2px}
-.i-pout-a{font-size:17px;font-weight:700;color:var(--ok);font-variant-numeric:tabular-nums}
-.i-status-row{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid #e5e7eb}
-.i-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700}
-.i-pill::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.ip-ok{background:var(--ok-bg);color:var(--ok)}.ip-ok::before{background:var(--ok)}
-.ip-err{background:var(--err-bg);color:var(--err)}.ip-err::before{background:var(--err)}
-.ip-info{background:var(--info-bg);color:var(--info)}.ip-info::before{background:var(--info)}
-.ip-purple{background:var(--purple-bg);color:var(--purple)}.ip-purple::before{background:var(--purple)}
-.ip-amber{background:var(--amber-bg);color:var(--amber)}.ip-amber::before{background:var(--amber)}
-.i-note{font-size:10.5px;color:#9ca3af;text-align:right;line-height:1.6}
-.inv-foot{background:#f9fafb;border-top:1px solid #e5e7eb;padding:14px 36px;display:flex;justify-content:space-between;align-items:center;border-radius:0 0 8px 8px}
-.inv-foot-co{font-size:11px;color:#9ca3af;line-height:1.8}
-.inv-foot-co strong{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:1px}
-.seal{width:48px;height:48px;border:2px solid var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:.25;font-size:7.5px;font-weight:700;color:var(--navy);text-align:center;line-height:1.4}
-/* toast */
-.toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:#111;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:500;display:none}
-.toast.show{display:block}
-@media print{.inv-ov,.inv-bar{display:none!important}}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13.5px;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+/* Admin mode — subtle purple tint on sidebar */
+body.admin-mode .sidebar { background: #1a0f2e; }
+body.admin-mode .sidebar-logo { border-bottom-color: rgba(124,58,237,0.3); }
+body.admin-mode .logo-icon { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+body.admin-mode .admin-mode-indicator { display: flex !important; }
+body.admin-mode .admin-only { display: flex !important; }
+body.admin-mode .admin-only-inline { display: inline-flex !important; }
+body.admin-mode .admin-only-block { display: block !important; }
+body:not(.admin-mode) .admin-only { display: none !important; }
+body:not(.admin-mode) .admin-only-inline { display: none !important; }
+body:not(.admin-mode) .admin-only-block { display: none !important; }
+
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+  transition: background 0.3s, width 0.25s;
+}
+.sidebar::-webkit-scrollbar { width: 0; }
+
+.sidebar-logo {
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.logo-icon {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, #1a56db, #3b82f6);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: white;
+  letter-spacing: -0.5px;
+  transition: background 0.3s;
+}
+.logo-name { font-size: 14px; font-weight: 700; color: #f8fafc; letter-spacing: 0.3px; }
+.logo-sub { font-size: 11px; color: var(--sidebar-text); line-height: 1.3; }
+
+/* Admin indicator strip in sidebar */
+.admin-mode-indicator {
+  display: none;
+  margin-top: 8px;
+  background: rgba(124,58,237,0.25);
+  border: 1px solid rgba(124,58,237,0.4);
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #c4b5fd;
+  align-items: center;
+  gap: 5px;
+}
+
+.sidebar-search {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.sidebar-search-inner {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-sm);
+  padding: 6px 10px;
+}
+.sidebar-search-inner input {
+  background: none; border: none; outline: none;
+  color: var(--sidebar-text-bright); font-size: 12.5px; width: 100%;
+}
+.sidebar-search-inner input::placeholder { color: var(--sidebar-text); }
+.sidebar-search-inner svg { color: var(--sidebar-text); flex-shrink: 0; }
+
+.nav-group { padding: 16px 14px 4px; }
+.nav-group-label {
+  font-size: 10.5px; font-weight: 600; color: var(--sidebar-group);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  padding: 0 6px; margin-bottom: 4px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--r-sm);
+  color: var(--sidebar-text);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 1px;
+  border-left: 2px solid transparent;
+}
+.nav-item:hover { background: var(--sidebar-hover); color: var(--sidebar-text-bright); }
+.nav-item.active {
+  background: var(--sidebar-active-bg);
+  color: #60a5fa;
+  border-left-color: var(--sidebar-active-border);
+}
+.nav-item .nav-count {
+  margin-left: auto;
+  background: rgba(255,255,255,0.1);
+  color: var(--sidebar-text);
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+.nav-item.active .nav-count { background: rgba(26,86,219,0.4); color: #93c5fd; }
+.nav-item.admin-only { border-left-color: transparent; }
+.nav-item.admin-only:hover { background: rgba(124,58,237,0.15); }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.sidebar-footer-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 10px;
+  border-radius: var(--r-sm);
+  color: var(--sidebar-text);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: none; border: none; width: 100%;
+  text-align: left;
+}
+.sidebar-footer-btn:hover { background: var(--sidebar-hover); color: var(--sidebar-text-bright); }
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.topbar {
+  height: var(--topbar-h);
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  gap: 10px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+  transition: border-bottom-color 0.3s;
+}
+body.admin-mode .topbar { border-bottom: 2px solid #a855f7; }
+
+.topbar-title {
+  font-size: 15px; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+  white-space: nowrap;
+}
+.topbar-title span.sub {
+  font-weight: 400; font-size: 13px; color: var(--text-3);
+}
+.topbar-spacer { flex: 1; }
+.topbar-search {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 6px 12px;
+  width: 220px;
+  transition: border-color 0.15s;
+}
+.topbar-search:focus-within { border-color: var(--primary); }
+.topbar-search input {
+  background: none; border: none; outline: none;
+  font-size: 13px; color: var(--text); width: 100%;
+}
+.topbar-search input::placeholder { color: var(--text-3); }
+.topbar-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 13px;
+  border-radius: var(--r-sm);
+  font-size: 12.5px; font-weight: 500;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--text-2);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.topbar-btn:hover { background: var(--bg); border-color: var(--border-mid); color: var(--text); }
+.topbar-btn.primary {
+  background: var(--primary); border-color: var(--primary); color: white;
+}
+.topbar-btn.primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+.topbar-btn.admin-mode-btn {
+  border-color: #a855f7; color: #7c3aed; background: #faf5ff;
+}
+.topbar-btn.admin-mode-btn:hover { background: var(--purple-bg); }
+body.admin-mode .topbar-btn.admin-mode-btn {
+  background: #7c3aed; border-color: #7c3aed; color: white;
+}
+.topbar-btn.danger { border-color: var(--red); color: var(--red); }
+.topbar-btn.danger:hover { background: var(--red-bg); }
+
+/* ============================================================
+   CONTENT AREA
+   ============================================================ */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+.content::-webkit-scrollbar { width: 6px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
+
+/* ============================================================
+   ROLE QUICK ENTRY (NEW IN V1.5)
+   ============================================================ */
+.role-bar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.role-bar-title {
+  font-size: 12px; color: var(--text-3); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.role-bar-title span { font-weight: 600; color: var(--text-2); }
+.role-btns {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.role-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text-2);
+  font-size: 12.5px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.role-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+.role-btn.active { border-color: var(--primary); color: white; background: var(--primary); }
+.role-btn .role-icon { font-size: 14px; }
+
+/* ============================================================
+   DASHBOARD WIDGETS (NEW IN V1.5)
+   ============================================================ */
+.dashboard-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.dash-widget {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.dash-widget-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.dash-widget-title {
+  font-size: 12.5px; font-weight: 700; color: var(--text);
+}
+.dash-widget-badge {
+  font-size: 10.5px; padding: 1px 7px; border-radius: 10px; font-weight: 600;
+}
+.dash-widget-badge.green { background: var(--green-bg); color: var(--green); }
+.dash-widget-badge.yellow { background: var(--yellow-bg); color: var(--yellow); }
+.dash-widget-badge.red { background: var(--red-bg); color: var(--red); }
+.dash-widget-badge.blue { background: var(--blue-bg); color: var(--blue); }
+
+.dash-tool-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+  border-radius: 4px;
+  padding: 5px 6px;
+  margin: 0 -6px;
+}
+.dash-tool-row:last-child { border-bottom: none; }
+.dash-tool-row:hover { background: var(--bg); }
+.dash-tool-name { font-size: 12.5px; color: var(--text); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dash-tool-meta { font-size: 11px; color: var(--text-3); white-space: nowrap; }
+.dash-tool-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-online { background: var(--green); }
+.dot-test { background: var(--blue); }
+.dot-update { background: var(--yellow); }
+.dot-plan { background: var(--gray); }
+
+.dash-empty { font-size: 12.5px; color: var(--text-3); padding: 8px 0; text-align: center; }
+
+.warn-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 6px; margin: 0 -6px;
+  border-radius: 4px; cursor: pointer;
+  transition: background 0.12s;
+}
+.warn-item:hover { background: var(--bg); }
+.warn-item-icon { font-size: 13px; flex-shrink: 0; }
+.warn-item-text { font-size: 12px; color: var(--text-2); flex: 1; }
+.warn-item-text strong { color: var(--text); }
+
+/* ============================================================
+   STATS BAR
+   ============================================================ */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-icon {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.stat-card.blue .stat-icon { background: var(--blue-bg); }
+.stat-card.green .stat-icon { background: var(--green-bg); }
+.stat-card.yellow .stat-icon { background: var(--yellow-bg); }
+.stat-card.red .stat-icon { background: var(--red-bg); }
+.stat-card.gray .stat-icon { background: var(--gray-bg); }
+.stat-card.purple .stat-icon { background: var(--purple-bg); }
+.stat-val { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.1; }
+.stat-lbl { font-size: 11.5px; color: var(--text-3); margin-top: 1px; }
+
+/* ============================================================
+   FILTER BAR
+   ============================================================ */
+.filter-bar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+}
+.filter-label { font-size: 12px; color: var(--text-3); white-space: nowrap; }
+.filter-select {
+  padding: 5px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 12.5px; color: var(--text);
+  background: var(--bg); outline: none; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.filter-select:focus { border-color: var(--primary); }
+.filter-divider { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.filter-count { margin-left: auto; font-size: 12px; color: var(--text-3); white-space: nowrap; }
+.filter-tag {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px; font-weight: 500;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+.filter-tag button { background: none; border: none; color: var(--primary); font-size: 13px; line-height: 1; cursor: pointer; padding: 0; }
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px; margin-top: 6px;
+}
+.section-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.section-count {
+  font-size: 11.5px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 10px;
+  padding: 1px 8px;
+  font-weight: 600;
+}
+.section-open-all {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--primary);
+  background: none; border: none;
+  cursor: pointer; padding: 4px 8px;
+  border-radius: var(--r-sm);
+  transition: background 0.15s;
+}
+.section-open-all:hover { background: var(--primary-light); }
+
+/* ============================================================
+   CARDS GRID
+   ============================================================ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+/* ============================================================
+   TOOL CARD
+   ============================================================ */
+.tool-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s;
+  box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column;
+}
+.tool-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--border-mid);
+}
+.tool-card.pinned { border-color: #fbbf24; }
+
+.card-top {
+  padding: 14px 16px 10px;
+  display: flex; align-items: flex-start; gap: 10px;
+  border-top: 3px solid var(--border);
+}
+.card-top.cat-cmhk { border-top-color: #1a56db; }
+.card-top.cat-rebate { border-top-color: #dc2626; }
+.card-top.cat-channel { border-top-color: #7c3aed; }
+.card-top.cat-kb { border-top-color: #059669; }
+.card-top.cat-hr { border-top-color: #d97706; }
+.card-top.cat-finance { border-top-color: #0891b2; }
+.card-top.cat-service { border-top-color: #ea580c; }
+.card-top.cat-data { border-top-color: #65a30d; }
+.card-top.cat-other { border-top-color: #6b7280; }
+.card-top.cat-plan { border-top-color: #d1d5db; }
+
+.card-emoji { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
+.card-meta { flex: 1; min-width: 0; }
+.card-name {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 3px;
+  display: flex; align-items: center; gap: 6px;
+}
+.card-version {
+  font-size: 10px; font-weight: 600;
+  background: var(--gray-bg); color: var(--gray);
+  border-radius: 4px; padding: 1px 5px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.card-badges { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-top: 2px; }
+.badge {
+  font-size: 10.5px; font-weight: 500;
+  padding: 1.5px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.badge-status-online { background: var(--green-bg); color: var(--green); }
+.badge-status-test { background: var(--blue-bg); color: var(--blue); }
+.badge-status-update { background: var(--yellow-bg); color: var(--yellow); }
+.badge-status-plan { background: var(--gray-bg); color: var(--gray); }
+.badge-user { background: #f0f4ff; color: #4f46e5; }
+.badge-pin { background: #fef9c3; color: #a16207; }
+/* Recommend badges */
+.badge-rec-recommended { background: #d1fae5; color: #065f46; }
+.badge-rec-internal { background: #dbeafe; color: #1e40af; }
+.badge-rec-caution { background: #fef3c7; color: #92400e; }
+.badge-rec-archived { background: #f3f4f6; color: #4b5563; }
+
+.card-actions-top { display: flex; gap: 4px; flex-shrink: 0; }
+.card-icon-btn {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.card-icon-btn:hover { background: var(--border); color: var(--text); }
+.card-icon-btn.pin-btn.pinned { background: #fef9c3; color: #a16207; border-color: #fcd34d; }
+
+.card-body { padding: 0 16px 10px; }
+.card-desc {
+  font-size: 12.5px; color: var(--text-2);
+  line-height: 1.55;
+  margin-bottom: 8px;
+}
+.card-problem {
+  font-size: 11.5px; color: var(--text-3);
+  padding: 6px 10px;
+  background: var(--bg);
+  border-radius: 6px;
+  border-left: 2px solid var(--border-mid);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.card-problem strong { color: var(--text-2); }
+.card-detail-row {
+  display: flex; gap: 14px;
+  font-size: 11.5px; color: var(--text-3);
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-detail-row span { display: flex; align-items: center; gap: 4px; }
+
+.card-expand {
+  border-top: 1px solid var(--border);
+  padding: 10px 16px;
+  display: none;
+  background: #fafbfc;
+}
+.card-expand.open { display: block; }
+.card-expand-item { font-size: 12px; color: var(--text-2); margin-bottom: 5px; }
+.card-expand-item strong { color: var(--text-3); font-weight: 500; margin-right: 4px; }
+
+.card-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  margin-top: auto;
+}
+.url-text {
+  flex: 1;
+  font-size: 11px;
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.url-text.no-link { color: #f59e0b; }
+.btn-open {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5.5px 12px;
+  border-radius: var(--r-sm);
+  font-size: 12px; font-weight: 500;
+  background: var(--primary);
+  color: white; border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-open:hover { background: var(--primary-dark); }
+.btn-open.disabled {
+  background: var(--gray-bg);
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+.btn-sm {
+  display: flex; align-items: center; gap: 4px;
+  padding: 5px 9px;
+  border-radius: var(--r-sm);
+  font-size: 11.5px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-sm:hover { background: var(--bg); border-color: var(--border-mid); }
+.btn-sm.edit { color: var(--blue); }
+.btn-sm.edit:hover { background: var(--blue-bg); border-color: var(--blue); }
+.btn-sm.del { color: var(--red); }
+.btn-sm.del:hover { background: var(--red-bg); border-color: var(--red); }
+.btn-sm.copy { color: var(--green); }
+.btn-sm.copy:hover { background: var(--green-bg); border-color: var(--green); }
+.btn-expand { margin-left: auto; font-size: 11px; color: var(--text-3); cursor: pointer; background: none; border: none; padding: 2px 4px; }
+.btn-expand:hover { color: var(--text-2); }
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-3);
+}
+.empty-state .emoji { font-size: 44px; margin-bottom: 12px; }
+.empty-state h3 { font-size: 15px; color: var(--text-2); margin-bottom: 6px; }
+.empty-state p { font-size: 13px; }
+
+/* ============================================================
+   MODALS
+   ============================================================ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.modal.wide { max-width: 680px; }
+.modal-header {
+  padding: 20px 24px 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title { font-size: 16px; font-weight: 700; }
+.modal-close {
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-3);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 16px;
+  transition: all 0.15s;
+}
+.modal-close:hover { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+.modal-body { padding: 18px 24px; }
+.modal-footer { padding: 0 24px 20px; display: flex; gap: 8px; justify-content: flex-end; }
+
+/* FORM */
+.form-row { margin-bottom: 14px; }
+.form-label { font-size: 12.5px; font-weight: 600; color: var(--text-2); margin-bottom: 5px; display: block; }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: 13px; color: var(--text);
+  background: var(--bg);
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); background: white; }
+.form-textarea { min-height: 72px; resize: vertical; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.form-hint { font-size: 11.5px; color: var(--text-3); margin-top: 4px; }
+
+/* PASSWORD MODAL */
+.pw-modal {
+  text-align: center; padding: 10px 0;
+}
+.pw-modal .lock-icon { font-size: 40px; margin-bottom: 12px; }
+.pw-modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.pw-modal p { font-size: 13px; color: var(--text-3); margin-bottom: 18px; }
+.pw-input-wrap {
+  display: flex; gap: 8px;
+  max-width: 280px; margin: 0 auto;
+}
+
+/* NOTICE */
+.notice-bar {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: var(--r-sm);
+  padding: 10px 16px;
+  font-size: 12.5px; color: #92400e;
+  margin-bottom: 20px;
+  display: flex; align-items: flex-start; gap: 8px;
+  line-height: 1.5;
+}
+.notice-bar.info { background: #eff6ff; border-color: #93c5fd; color: #1e40af; }
+
+/* PUBLISH CHECK */
+.check-list { list-style: none; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.check-item:last-child { border-bottom: none; }
+.check-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.check-text { flex: 1; }
+.check-text strong { font-size: 13px; color: var(--text); display: block; margin-bottom: 2px; }
+.check-text p { font-size: 12px; color: var(--text-3); }
+.check-text .names { font-size: 11.5px; color: var(--text-2); margin-top: 4px; font-style: italic; }
+
+/* DATA MANAGEMENT */
+.data-action-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 16px;
+}
+.data-action-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.data-action-card:hover { border-color: var(--primary); background: var(--primary-light); }
+.data-action-card.danger:hover { border-color: var(--red); background: var(--red-bg); }
+.data-action-card .icon { font-size: 22px; margin-bottom: 6px; }
+.data-action-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.data-action-card p { font-size: 11.5px; color: var(--text-3); }
+
+.changelog-textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  font-size: 12.5px; color: var(--text);
+  font-family: 'SFMono-Regular', monospace;
+  background: var(--bg);
+  outline: none;
+}
+.log-item {
+  display: flex; gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px; color: var(--text-2);
+  align-items: center;
+}
+.log-item:last-child { border-bottom: none; }
+.log-date { color: var(--text-3); white-space: nowrap; min-width: 76px; }
+.log-badge { font-size: 10.5px; padding: 0 6px; border-radius: 10px; height: 18px; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
+
+/* TOAST */
+#toast-wrap {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+}
+.toast {
+  display: flex; align-items: center; gap: 9px;
+  padding: 11px 16px;
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+  font-size: 13px; font-weight: 500;
+  animation: slideIn 0.2s ease;
+  max-width: 340px;
+  color: white;
+}
+.toast.success { background: var(--green); }
+.toast.error { background: var(--red); }
+.toast.info { background: var(--primary); }
+.toast.warning { background: var(--yellow); }
+@keyframes slideIn {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* DATASOURCE BANNER */
+.datasource-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px;
+  border-radius: 10px;
+  font-size: 11px; font-weight: 600;
+  margin-left: 8px;
+}
+.datasource-tag.json { background: #dcfce7; color: #166534; }
+.datasource-tag.default { background: var(--gray-bg); color: var(--gray); }
+.datasource-tag.local { background: var(--blue-bg); color: var(--blue); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .dashboard-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  :root { --sidebar-width: 0px; }
+  .sidebar { position: fixed; z-index: 200; width: 0; transition: width 0.25s; }
+  .sidebar.mobile-open { width: 220px; }
+  .topbar { padding: 0 14px; gap: 6px; }
+  .topbar-search { width: 150px; }
+  .content { padding: 14px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: 1fr 1fr; }
+  .filter-bar { gap: 8px; }
+  .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+  .role-btns { gap: 6px; }
+  .data-action-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
+<div class="app">
 
-<div class="topbar">
-  <div class="topbar-l">JOINCOM CHINA LIMITED · 聚客中国有限公司</div>
-  <div class="topbar-r"><span>Hong Kong Office</span><span>薪酬管理台账</span></div>
-</div>
-<div class="hdr">
-  <div class="brand">
-    <div class="brand-mark">JC</div>
-    <div><div class="brand-name">JOINCOM</div><div class="brand-sub">薪酬管理台账</div></div>
-  </div>
-</div>
+  <!-- ══════════════════════════════════════════
+       SIDEBAR
+       ══════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">JC</div>
+        <span class="logo-name">JOINCOM 聚客</span>
+      </div>
+      <div class="logo-sub">内部工具导航中心 v1.5</div>
+      <div class="admin-mode-indicator" id="adminIndicator">
+        🔧 <span>维护模式已开启</span>
+      </div>
+    </div>
 
-<div class="shell">
-  <aside class="sb">
-    <div class="sb-lbl">合作伙伴</div>
-    <div id="plist"></div>
-    <div class="sb-sep"></div>
-    <button class="btn-np" id="btn-np">+ 新增合作伙伴</button>
+    <div class="sidebar-search">
+      <div class="sidebar-search-inner">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="快速搜索工具…" id="sideSearchInput" oninput="handleSideSearch(this.value)">
+      </div>
+    </div>
+
+    <nav id="sideNav">
+      <div class="nav-group">
+        <div class="nav-group-label">概览</div>
+        <div class="nav-item active" onclick="filterCat('all')" id="nav-all">
+          <span>🏠</span> 全部工具 <span class="nav-count" id="nav-count-all">0</span>
+        </div>
+        <div class="nav-item" onclick="filterCat('pinned')" id="nav-pinned">
+          <span>📌</span> 常用工具 <span class="nav-count" id="nav-count-pinned">0</span>
+        </div>
+        <div class="nav-item" onclick="filterCat('recent')" id="nav-recent">
+          <span>🕐</span> 最近更新 <span class="nav-count" id="nav-count-recent">0</span>
+        </div>
+        <!-- admin only -->
+        <div class="nav-item admin-only" onclick="filterCat('nolink')" id="nav-nolink" style="display:none">
+          <span>🔗</span> 待补链接 <span class="nav-count" id="nav-count-nolink">0</span>
+        </div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">业务分类</div>
+        <div class="nav-item" onclick="filterCat('cmhk')" id="nav-cmhk"><span>📱</span> CMHK 业务管理 <span class="nav-count" id="nav-count-cmhk">0</span></div>
+        <div class="nav-item" onclick="filterCat('rebate')" id="nav-rebate"><span>💰</span> 返现 / 活动管理 <span class="nav-count" id="nav-count-rebate">0</span></div>
+        <div class="nav-item" onclick="filterCat('channel')" id="nav-channel"><span>🤝</span> 渠道合作与客户转化 <span class="nav-count" id="nav-count-channel">0</span></div>
+        <div class="nav-item" onclick="filterCat('kb')" id="nav-kb"><span>📚</span> 内部知识库 <span class="nav-count" id="nav-count-kb">0</span></div>
+        <div class="nav-item" onclick="filterCat('hr')" id="nav-hr"><span>👥</span> 行政人事工具 <span class="nav-count" id="nav-count-hr">0</span></div>
+        <div class="nav-item" onclick="filterCat('finance')" id="nav-finance"><span>🧾</span> 财务 / 合同 / 编号 <span class="nav-count" id="nav-count-finance">0</span></div>
+        <div class="nav-item" onclick="filterCat('service')" id="nav-service"><span>🛎️</span> 售后服务支持 <span class="nav-count" id="nav-count-service">0</span></div>
+        <div class="nav-item" onclick="filterCat('data')" id="nav-data"><span>📊</span> 运营数据与分析 <span class="nav-count" id="nav-count-data">0</span></div>
+        <div class="nav-item" onclick="filterCat('other')" id="nav-other"><span>🔧</span> 其他工具 <span class="nav-count" id="nav-count-other">0</span></div>
+        <div class="nav-item" onclick="filterCat('plan')" id="nav-plan"><span>🗓️</span> 待规划工具 <span class="nav-count" id="nav-count-plan">0</span></div>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn admin-only" onclick="openDataModal()" style="display:none">⚙️ 数据管理</button>
+      <button class="sidebar-footer-btn admin-only" onclick="openPublishCheck()" style="display:none">🚀 发布检查</button>
+      <button class="sidebar-footer-btn" onclick="openChangelogModal()">📝 更新日志</button>
+      <button class="sidebar-footer-btn" onclick="showHelp()">❓ 使用说明</button>
+    </div>
   </aside>
+
+  <!-- ══════════════════════════════════════════
+       MAIN
+       ══════════════════════════════════════════ -->
   <div class="main">
-    <div class="pg-head">
-      <div>
-        <div class="pg-title" id="pg-title">合作伙伴台账</div>
-        <div class="pg-sub" id="pg-sub">正在加载数据…</div>
+    <div class="topbar">
+      <button class="card-icon-btn" onclick="toggleSidebar()" style="display:none;flex-shrink:0" id="menuBtn">☰</button>
+      <div class="topbar-title">
+        <span id="topbar-heading">全部工具</span>
+        <span class="sub" id="topbar-sub"></span>
+        <span class="datasource-tag" id="datasourceTag" style="display:none"></span>
       </div>
-      <button class="btn btn-dark" id="btn-add-rec">+ 新增月份</button>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#94a3b8;flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="搜索工具…" id="mainSearchInput" oninput="handleSearch()">
+      </div>
+      <!-- admin-only buttons -->
+      <button class="topbar-btn admin-only" onclick="openDataModal()" title="数据管理" style="display:none">⚙️ 数据</button>
+      <button class="topbar-btn admin-only" onclick="openPublishCheck()" title="发布检查" style="display:none">🚀 检查</button>
+      <button class="topbar-btn primary admin-only" onclick="openAddModal()" style="display:none">＋ 新增工具</button>
+      <!-- always visible -->
+      <button class="topbar-btn admin-mode-btn" onclick="toggleAdminMode()" id="adminModeBtn">🔧 维护模式</button>
     </div>
-    <div class="stats" id="stats"></div>
-    <div class="pstrip" id="pstrip"></div>
-    <div class="lcard">
-      <div class="lcard-head">
-        <div><span class="lcard-title">月度台账</span><span class="lcard-hint" id="rec-cnt" style="margin-left:8px;color:var(--t2);font-size:12px;font-weight:400"></span></div>
-        <span class="lcard-hint">最新月份在最前 · 点击行编辑 · 📄 生成结算单</span>
+
+    <div class="content" id="mainContent"><!-- rendered by JS --></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PASSWORD MODAL
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="pwModal">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-body">
+      <div class="pw-modal">
+        <div class="lock-icon">🔐</div>
+        <h3>进入维护模式</h3>
+        <p>输入维护密码以启用新增、编辑、删除等管理功能。</p>
+        <div class="pw-input-wrap">
+          <input class="form-input" type="password" id="pwInput" placeholder="请输入密码" onkeydown="if(event.key==='Enter')verifyPw()">
+          <button class="topbar-btn primary" onclick="verifyPw()">确认</button>
+        </div>
+        <p id="pwError" style="color:var(--red);font-size:12px;margin-top:10px;display:none">密码错误，请重试</p>
       </div>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr>
-            <th class="la">所属期</th><th>薪资基数</th><th>MPF雇主</th><th>MPF雇员</th>
-            <th>劳工险</th><th>管理费</th><th>应收</th><th>实收</th>
-            <th>差异</th><th>净发</th><th>收款日</th><th>状态</th><th class="la">备注</th><th class="ctr">账单</th>
-          </tr></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="topbar-btn" onclick="closeModal('pwModal')">取消</button>
     </div>
   </div>
 </div>
 
-<!-- record modal -->
-<div class="overlay" id="rec-modal">
-<div class="modal">
-  <div class="m-head"><span class="m-title" id="m-title">新增月度记录</span><button class="m-x" id="m-close">×</button></div>
-  <form id="rec-form">
-  <div class="m-body">
-    <div class="fs"><div class="fs-title">基本信息</div>
-      <div class="fg2">
-        <div class="fg"><label class="f-lbl">所属期</label><input class="f-in" type="month" id="f-period" required></div>
-        <div class="fg"><label class="f-lbl">薪资基数 HKD</label><input class="f-in" type="number" id="f-salary" step="0.01" required></div>
-      </div>
+<!-- ══════════════════════════════════════════
+     ADD/EDIT MODAL
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal wide">
+    <div class="modal-header">
+      <div class="modal-title" id="editModalTitle">新增工具</div>
+      <button class="modal-close" onclick="closeModal('editModal')">✕</button>
     </div>
-    <div class="fs"><div class="fs-title">代缴项目</div>
-      <div class="fg2">
-        <div class="fg"><label class="f-lbl">MPF 雇主</label><input class="f-in" type="number" id="f-mpfe" step="0.01" value="1500"></div>
-        <div class="fg"><label class="f-lbl">MPF 雇员</label><input class="f-in" type="number" id="f-mpfp" step="0.01" value="1500"></div>
-        <div class="fg"><label class="f-lbl">劳工险</label><input class="f-in" type="number" id="f-ins" step="0.01"></div>
-        <div class="fg"><label class="f-lbl">管理费</label><input class="f-in" type="number" id="f-sfee" step="0.01"></div>
-        <div class="fg"><label class="f-lbl">应收（自动）</label><input class="f-in" type="number" id="f-due" readonly></div>
-        <div class="fg"><label class="f-lbl">净发（自动）</label><input class="f-in" type="number" id="f-net" readonly></div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-row">
+        <label class="form-label">工具名称 *</label>
+        <input class="form-input" id="f-name" placeholder="例如：CMHK 自营客户管理后台">
       </div>
-    </div>
-    <div class="fs"><div class="fs-title">收款信息</div>
-      <div class="fg2">
-        <div class="fg s2"><label class="f-lbl">收款货币</label>
-          <div class="ccy-sw"><button type="button" class="on" data-c="HKD">HKD 港币</button><button type="button" data-c="CNY">CNY 人民币</button></div>
-        </div>
-        <div class="fg" id="hkd-grp"><label class="f-lbl">实收 HKD</label><input class="f-in" type="number" id="f-recv" step="0.01"></div>
-        <div class="cny-row" id="cny-row">
-          <div class="fg"><label class="f-lbl">CNY 金额</label><input class="f-in" type="number" id="f-cny" step="0.01"></div>
-          <div class="fg"><label class="f-lbl">汇率 1HKD=?CNY</label><input class="f-in" type="number" id="f-rate" step="0.0001" placeholder="如0.875"></div>
-          <div class="fg"><label class="f-lbl">HKD等值（自动）</label><input class="f-in" type="number" id="f-hkdeq" readonly></div>
-        </div>
-        <div class="fg"><label class="f-lbl">差异（自动）</label><input class="f-in" type="number" id="f-var" readonly><span class="f-hint" id="f-var-hint"></span></div>
-        <div class="fg"><label class="f-lbl">收款日期</label><input class="f-in" type="date" id="f-date"></div>
-        <div class="fg"><label class="f-lbl">状态</label>
-          <select class="f-in" id="f-status">
-            <option value="待收款">待收款</option><option value="已完成">已完成</option>
-            <option value="差额待追">差额待追</option><option value="预付有余">预付有余</option><option value="对冲处理">对冲处理</option>
+      <div class="form-row-3">
+        <div class="form-row">
+          <label class="form-label">所属项目 *</label>
+          <select class="form-select" id="f-cat">
+            <option value="cmhk">📱 CMHK 业务管理</option>
+            <option value="rebate">💰 返现 / 活动管理</option>
+            <option value="channel">🤝 渠道合作与客户转化</option>
+            <option value="kb">📚 内部知识库</option>
+            <option value="hr">👥 行政人事工具</option>
+            <option value="finance">🧾 财务 / 合同 / 编号</option>
+            <option value="service">🛎️ 售后服务支持</option>
+            <option value="data">📊 运营数据与分析</option>
+            <option value="other">🔧 其他工具</option>
+            <option value="plan">🗓️ 待规划工具</option>
           </select>
         </div>
-        <div class="fg s2"><label class="f-lbl">备注</label><textarea class="f-in" id="f-notes" rows="2"></textarea></div>
+        <div class="form-row">
+          <label class="form-label">工具状态</label>
+          <select class="form-select" id="f-status">
+            <option value="online">✅ 已上线</option>
+            <option value="test">🔵 测试中</option>
+            <option value="update">🟡 待更新</option>
+            <option value="plan">⚪ 规划中</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">推荐程度</label>
+          <select class="form-select" id="f-recommend">
+            <option value="recommended">⭐ 推荐使用</option>
+            <option value="internal">🔵 内部测试</option>
+            <option value="caution">⚠️ 谨慎使用</option>
+            <option value="archived">📦 已归档</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row-3">
+        <div class="form-row">
+          <label class="form-label">使用对象</label>
+          <select class="form-select" id="f-user">
+            <option value="me">👤 我自己</option>
+            <option value="cs">🎧 客服团队</option>
+            <option value="channel">🤝 渠道伙伴</option>
+            <option value="finance">💼 财务</option>
+            <option value="hr">👥 行政人事</option>
+            <option value="mgmt">👔 管理层</option>
+            <option value="all">🌐 全员</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">维护人</label>
+          <input class="form-input" id="f-owner" placeholder="例如：Yaowanting">
+        </div>
+        <div class="form-row">
+          <label class="form-label">版本号</label>
+          <input class="form-input" id="f-version" placeholder="例如：V1.0">
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">工具简介</label>
+        <textarea class="form-textarea" id="f-desc" placeholder="简单介绍这个工具的主要功能…"></textarea>
+      </div>
+      <div class="form-row">
+        <label class="form-label">解决的问题</label>
+        <textarea class="form-textarea" id="f-problem" placeholder="这个工具解决了什么业务痛点？" style="min-height:56px"></textarea>
+      </div>
+      <div class="form-row">
+        <label class="form-label">入口链接</label>
+        <input class="form-input" id="f-url" placeholder="https://example.com/tool">
+        <div class="form-hint">暂无链接可填写 https://example.com/xxx 作占位，后续再替换</div>
+      </div>
+      <div class="form-row-3">
+        <div class="form-row">
+          <label class="form-label">表情图标</label>
+          <input class="form-input" id="f-emoji" placeholder="📱">
+        </div>
+        <div class="form-row">
+          <label class="form-label">维护部门</label>
+          <select class="form-select" id="f-dept">
+            <option value="">— 未指定 —</option>
+            <option value="运营">运营</option>
+            <option value="财务">财务</option>
+            <option value="行政">行政</option>
+            <option value="技术">技术</option>
+            <option value="管理层">管理层</option>
+            <option value="客服">客服</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label class="form-label">更新时间</label>
+          <input class="form-input" id="f-date" type="date">
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">备注</label>
+        <input class="form-input" id="f-note" placeholder="其他说明、链接替换记录等">
       </div>
     </div>
-  </div>
-  <div class="m-foot">
-    <div class="m-foot-l"><button type="button" class="btn btn-del" id="btn-del" style="display:none">删除</button></div>
-    <button type="button" class="btn btn-ghost" id="btn-cancel">取消</button>
-    <button type="submit" class="btn btn-dark">保存</button>
-  </div>
-  </form>
-</div>
-</div>
-
-<!-- partner modal -->
-<div class="overlay" id="pm-modal">
-<div class="modal">
-  <div class="m-head"><span class="m-title">新增合作伙伴</span><button class="m-x" id="pm-x">×</button></div>
-  <form id="pm-form">
-  <div class="m-body">
-    <div class="fg2">
-      <div class="fg"><label class="f-lbl">姓名</label><input class="f-in" type="text" id="pm-name" required></div>
-      <div class="fg"><label class="f-lbl">公司</label><input class="f-in" type="text" id="pm-co" required></div>
-      <div class="fg"><label class="f-lbl">薪资基数 HKD</label><input class="f-in" type="number" id="pm-sal" required></div>
-      <div class="fg"><label class="f-lbl">联系邮箱（发账单用）</label><input class="f-in" type="email" id="pm-email" placeholder="选填"></div>
-      <div class="fg"><label class="f-lbl">服务开始日期</label><input class="f-in" type="date" id="pm-start" required></div>
-      <div class="fg"><label class="f-lbl">管理费率</label><input class="f-in" type="number" id="pm-sfr" step="0.001" value="0.016"></div>
-      <div class="fg"><label class="f-lbl">MPF费率</label><input class="f-in" type="number" id="pm-mfr" step="0.001" value="0.05"></div>
-      <div class="fg"><label class="f-lbl">劳工险费率</label><input class="f-in" type="number" id="pm-ifr" step="0.0001" value="0.00355"></div>
+    <div class="modal-footer">
+      <button class="topbar-btn" onclick="closeModal('editModal')">取消</button>
+      <button class="topbar-btn primary" onclick="saveTool()">保存工具</button>
     </div>
   </div>
-  <div class="m-foot">
-    <button type="button" class="btn btn-ghost" id="pm-cancel">取消</button>
-    <button type="submit" class="btn btn-dark">保存</button>
-  </div>
-  </form>
-</div>
 </div>
 
-<!-- invoice overlay -->
-<div class="inv-ov" id="inv-ov">
-  <div class="inv-wrap">
-    <div class="inv-bar">
-      <span class="inv-bar-title">📄 月度结算单</span>
-      <div class="inv-btns">
-        <button class="ib ib-mail" id="ib-mail">✉ 发送邮件</button>
-        <button class="ib ib-print" id="ib-print">⬇ 打印 / 存PDF</button>
-        <button class="ib ib-close" id="ib-close">✕</button>
+<!-- ══════════════════════════════════════════
+     DATA MANAGEMENT MODAL
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="dataModal">
+  <div class="modal wide">
+    <div class="modal-header">
+      <div class="modal-title">⚙️ 数据管理</div>
+      <button class="modal-close" onclick="closeModal('dataModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="notice-bar">
+        ⚠️ <span>本页数据存储于本地 localStorage。要让所有同事看到最新内容，需<strong>导出 tools.json</strong>，上传到网站同目录，或替换 HTML 内置默认数据后重新发布。</span>
       </div>
+      <div class="data-action-grid">
+        <div class="data-action-card" onclick="exportToolsJSON()">
+          <div class="icon">📤</div>
+          <h4>导出 tools.json</h4>
+          <p>直接上传替换，无需改 HTML</p>
+        </div>
+        <div class="data-action-card" onclick="exportFullJSON()">
+          <div class="icon">💾</div>
+          <h4>导出完整备份</h4>
+          <p>含日志的完整数据备份</p>
+        </div>
+        <div class="data-action-card" onclick="triggerImport()">
+          <div class="icon">📥</div>
+          <h4>导入 JSON 数据</h4>
+          <p>从备份文件恢复数据</p>
+        </div>
+        <div class="data-action-card" onclick="copyToolList()">
+          <div class="icon">📋</div>
+          <h4>复制工具清单</h4>
+          <p>纯文本格式，可发给同事</p>
+        </div>
+        <div class="data-action-card" onclick="generateUpdateNote()">
+          <div class="icon">📢</div>
+          <h4>生成更新通知</h4>
+          <p>生成可发送给同事的通知</p>
+        </div>
+        <div class="data-action-card" onclick="resetDefault()">
+          <div class="icon">🔄</div>
+          <h4>重置为默认数据</h4>
+          <p>恢复内置工具清单</p>
+        </div>
+        <div class="data-action-card danger" onclick="clearAll()">
+          <div class="icon">🗑️</div>
+          <h4>清空本地数据</h4>
+          <p>删除所有 localStorage 数据</p>
+        </div>
+        <div class="data-action-card" onclick="reloadFromJSON()">
+          <div class="icon">🔃</div>
+          <h4>重新读取 tools.json</h4>
+          <p>从外部文件重新加载</p>
+        </div>
+      </div>
+      <div id="dataOutput" style="display:none;">
+        <label class="form-label">输出结果（可复制）</label>
+        <textarea class="changelog-textarea" id="dataOutputText" readonly></textarea>
+        <button class="topbar-btn" style="margin-top:8px" onclick="copyOutputText()">📋 复制到剪贴板</button>
+      </div>
+      <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="handleImportFile(this)">
     </div>
-    <div class="inv-body" id="inv-body"></div>
-    <div class="inv-foot">
-      <div class="inv-foot-co"><strong>聚客中国有限公司</strong>JOINCOM CHINA LIMITED<br/>中国移动香港（CMHK）一级授权分销商<br/>薪酬管理 · 强积金代缴 · 劳工险代办</div>
-      <div class="seal">JOINCOM<br/>聚客<br/>中国</div>
+    <div class="modal-footer">
+      <button class="topbar-btn" onclick="closeModal('dataModal')">关闭</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ══════════════════════════════════════════
+     PUBLISH CHECK MODAL
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="publishModal">
+  <div class="modal wide">
+    <div class="modal-header">
+      <div class="modal-title">🚀 发布前检查</div>
+      <button class="modal-close" onclick="closeModal('publishModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="publishCheckResult"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="topbar-btn" onclick="closeModal('publishModal')">关闭</button>
+      <button class="topbar-btn primary" onclick="exportToolsJSON()">导出 tools.json</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CHANGELOG MODAL
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="changelogModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📝 更新日志</div>
+      <button class="modal-close" onclick="closeModal('changelogModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="admin-only-block" style="display:none">
+        <div class="form-row">
+          <label class="form-label">添加更新记录</label>
+          <textarea class="form-textarea" id="newLogText" placeholder="例如：新增【合同编号记录工具】，已替换正式链接。"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <select class="form-select" id="logTypeSelect" style="width:auto">
+            <option value="new">新增</option>
+            <option value="update" selected>更新</option>
+            <option value="done">完成</option>
+            <option value="fix">修复</option>
+          </select>
+          <button class="topbar-btn primary" onclick="addLogEntry()">+ 添加记录</button>
+        </div>
+      </div>
+      <div id="logList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="topbar-btn" onclick="closeModal('changelogModal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HELP MODAL
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay" id="helpModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">❓ 使用说明</div>
+      <button class="modal-close" onclick="closeModal('helpModal')">✕</button>
+    </div>
+    <div class="modal-body" style="font-size:13px;color:var(--text-2);line-height:1.7">
+      <p style="margin-bottom:10px"><strong style="color:var(--text)">这是什么？</strong><br>JOINCOM 聚客内部工具导航中心，汇总了公司所有内部工具的链接、说明和状态。</p>
+      <p style="margin-bottom:10px"><strong style="color:var(--text)">如何找工具？</strong><br>可通过左侧分类导航、顶部搜索框、角色快捷入口（我是客服等）快速定位工具。</p>
+      <p style="margin-bottom:10px"><strong style="color:var(--text)">链接显示「待补正式链接」？</strong><br>表示该工具还未配置正式入口，请联系工具维护人获取链接。</p>
+      <p style="margin-bottom:10px"><strong style="color:var(--text)">数据是最新的吗？</strong><br>页面加载时会优先读取同目录的 <code style="background:var(--bg);padding:1px 4px;border-radius:3px">tools.json</code>，读取失败则使用 HTML 内置数据。顶部会显示数据来源标签。</p>
+      <p style="margin-bottom:10px"><strong style="color:var(--text)">维护模式是什么？</strong><br>点击右上角「维护模式」输入密码后，可新增/编辑/删除工具。普通查看模式下这些按钮隐藏，防止误操作。</p>
+      <p><strong style="color:var(--text)">我修改了，同事能看到吗？</strong><br>不能。本地修改仅存在你的浏览器中。需要「导出 tools.json」并上传到服务器，或重新发布 HTML 文件，同事才能看到最新内容。</p>
+    </div>
+    <div class="modal-footer">
+      <button class="topbar-btn primary" onclick="closeModal('helpModal')">明白了</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-wrap"></div>
 
 <script>
-(function(){
 'use strict';
+// ============================================================
+// DEFAULT TOOLS DATA (V1.5 — with new fields: recommend, owner, version, dept)
+// ============================================================
+const DEFAULT_TOOLS = [
+  { id:'t001', name:'CMHK 自营客户管理后台', cat:'cmhk', status:'online', user:'me', emoji:'📱',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V6.0',
+    desc:'面向 CMHK 自营渠道的完整客户生命周期管理系统，涵盖订单录入、用户激活追踪、多档期佣金结算（T+1/T+3/T+7）、返现绑定与发放、月度经营汇总、风控中心等核心模块。',
+    problem:'解决了手工录入 Excel 导致的返现编号抄错、佣金漏算、激活状态追踪困难等问题，月均节省 30+ 小时人工操作。',
+    url:'https://example.com/cmhk-crm', date:'2026-05-17', note:'含渠道协办模块、风控中心、经营看板。待替换为正式链接。', pinned:true, updatedAt:'2026-05-17' },
+  { id:'t002', name:'CMHK 套餐管理看板', cat:'cmhk', status:'online', user:'cs', emoji:'🗂️',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V1.2',
+    desc:'双角色套餐查看工具：内部视图含渠道返还、佣金结构、推荐标签；客户视图隐藏内部信息，突出官方价 vs 优惠后实际月费，可直接截图发给客户。支持按人群快速筛选。',
+    problem:'客服人员以前需手动整理套餐清单，效率低且易出错。此工具实现快速检索、一键截图。',
+    url:'https://example.com/cmhk-plans', date:'2026-04-08', note:'待替换为正式链接。', pinned:true, updatedAt:'2026-04-08' },
+  { id:'t003', name:'CMHK 套餐收益测算工具', cat:'cmhk', status:'online', user:'me', emoji:'📐',
+    recommend:'internal', owner:'Yaowanting', dept:'运营', version:'V1.0',
+    desc:'录入套餐政策后自动拆解并计算佣金、风控预留、渠道分佣、客户优惠成本、净留存收益及毛利率。支持套餐横向对比（最多5个），按月份筛选历史政策版本。',
+    problem:'以前拿到甲方政策文件需手动计算多个维度收益，耗时易错。此工具录入即出结果。',
+    url:'https://example.com/cmhk-plan-tool', date:'2026-04-03', note:'含历史政策库，支持 Excel 导入导出。待替换为正式链接。', pinned:false, updatedAt:'2026-04-03' },
+  { id:'t004', name:'返现审批邮件自动生成', cat:'rebate', status:'online', user:'me', emoji:'📧',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V1.0',
+    desc:'根据当日激活日期自动生成应返现客户清单，自动区分自营/渠道客户（金额规则不同），生成标准格式审批邮件。优化前约 10 分钟/次，优化后约 5 分钟/次。',
+    problem:'每日返现审批全依赖人工整理，容易漏返/多返/错返。年化节省约 1,188 元人工成本，错误率大幅下降。',
+    url:'https://example.com/cmhk-crm', date:'2026-04-04', note:'集成在自营后台「活动返现管理」模块内。', pinned:false, updatedAt:'2026-04-04' },
+  { id:'t005', name:'用户返现明细管理', cat:'rebate', status:'online', user:'me', emoji:'💳',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V6.0',
+    desc:'管理每位客户的返现账户绑定信息（返现易 ID、币种、绑定日期）、返现发放进度（每期状态、确认操作），自动计算每期返现日期（激活日+N月同日规则）。',
+    problem:'以前返现易编号靠手工粘贴，经常抄错；现在录入即自动关联，可追踪 24 期进度。',
+    url:'https://example.com/cmhk-crm', date:'2026-04-04', note:'集成在自营后台「活动返现管理 → 用户返现明细」页面。', pinned:false, updatedAt:'2026-04-04' },
+  { id:'t006', name:'月度返现进度看板', cat:'rebate', status:'online', user:'me', emoji:'📅',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V6.0',
+    desc:'按月份维度展示所有客户的返现到期情况，区分「已返还」「待返还」「客户未绑定返现易」三种状态，统计本月 HKD/CNY 已返金额，支持月份切换查看历史。',
+    problem:'月底对账无法快速知道本月有多少人到期、已返多少、还有多少未处理，此看板一目了然。',
+    url:'https://example.com/cmhk-crm', date:'2026-04-04', note:'集成在自营后台「活动返现管理 → 月度返还进度」页面。', pinned:false, updatedAt:'2026-04-04' },
+  { id:'t007', name:'渠道协办服务工单管理', cat:'channel', status:'online', user:'me', emoji:'📝',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V1.0',
+    desc:'管理渠道合作协办服务工单，支持入网履约支持（押金代办 50 HKD/单）和渠道拓客服务两种类型。含合作渠道信息管理、工单统计、「录入即结算」快捷操作。',
+    problem:'渠道协办记录散落在微信/Excel，无法追踪工单状态和累计金额。此模块将所有协办流程数字化。',
+    url:'https://example.com/cmhk-crm', date:'2026-04-10', note:'集成在自营后台「渠道协办服务」模块。待替换为正式链接。', pinned:false, updatedAt:'2026-04-10' },
+  { id:'t008', name:'客户推荐推广闭环系统', cat:'channel', status:'plan', user:'cs', emoji:'🔗',
+    recommend:'internal', owner:'', dept:'技术', version:'',
+    desc:'为已激活客户生成专属推荐码，追踪推荐关系，被推荐人激活后自动生成推广奖励记录。整套流程在返现发放后触发推荐入口推送，实现推荐奖励与返现并行运营。',
+    problem:'目前推广全靠口耳相传，无法追踪推荐来源和激励效果。此系统实现闭环追踪、奖励自动计算。',
+    url:'https://example.com/referral-system', date:'2026-05-07', note:'规划中，需要后端支持。当前阶段通过客服手动操作过渡。', pinned:false, updatedAt:'2026-05-07' },
+  { id:'t009', name:'渠道分销体系文档', cat:'channel', status:'online', user:'mgmt', emoji:'📑',
+    recommend:'internal', owner:'Yaowanting', dept:'管理层', version:'V1.0',
+    desc:'渠道分销佣金结构设计文档，涵盖渠道分级（A/B/C级）、保证金机制、佣金梯度规则、违规扣减条款、退出机制、培训合规认证要求等完整体系。',
+    problem:'公司准备拓展分销渠道，缺乏系统性的合规框架和佣金方案文档。',
+    url:'https://example.com/channel-doc', date:'2026-03-18', note:'Word 文档版本，待转为在线可查阅版本。待替换为正式链接。', pinned:false, updatedAt:'2026-03-18' },
+  { id:'t010', name:'JOINCOM 内部项目知识库', cat:'kb', status:'online', user:'all', emoji:'📚',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V1.0',
+    desc:'公司内部综合知识库，涵盖 CMHK 业务操作规范、MPF 操作指引、积金易平台使用手册、常见问题 Q&A（26条官方解答，6大分类）、供款时间安排等。',
+    problem:'新同事入职需花大量时间向老员工请教，知识传承依赖人而非系统。此知识库让任何人打开即可自助查阅。',
+    url:'https://example.com/joincom-kb', date:'2026-05-13', note:'待替换为正式链接。JOINCOM_知识库_V1.html', pinned:true, updatedAt:'2026-05-13' },
+  { id:'t011', name:'CMHK 内部培训手册', cat:'kb', status:'online', user:'all', emoji:'📘',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V1.0',
+    desc:'Word 文档格式的 CMHK 业务内部培训材料，包含系统使用说明、业务流程图解、返现规则说明（含月末顺延场景）、V2版本规划与进度追踪表等。',
+    problem:'没有系统性内部培训材料，新人上手靠口传，容易遗漏重要规则（如返现日期计算逻辑）。',
+    url:'https://example.com/cmhk-training', date:'2026-03-29', note:'Word 文档，V1.0 已确认版。待替换为正式链接。', pinned:false, updatedAt:'2026-03-29' },
+  { id:'t012', name:'MPF 强积金知识库', cat:'hr', status:'online', user:'hr', emoji:'🏦',
+    recommend:'recommended', owner:'Yaowanting', dept:'行政', version:'V1.0',
+    desc:'专为香港公司行政人事设计的 MPF 操作知识库，包含雇主注册全流程、员工登记指引、积金易平台操作步骤（含真实截图）、每月供款时间安排及违规风险提示。',
+    problem:'行政人事对 MPF 流程不熟悉，容易逾期供款（需额外缴 5% 附加费），或在积金易操作时卡壳。',
+    url:'https://example.com/joincom-kb', date:'2026-05-13', note:'整合在 JOINCOM 内部知识库的强积金板块。待替换为正式链接。', pinned:false, updatedAt:'2026-05-13' },
+  { id:'t013', name:'雇主 MPF 注册全流程指引', cat:'hr', status:'online', user:'hr', emoji:'📋',
+    recommend:'recommended', owner:'Yaowanting', dept:'行政', version:'V1.0',
+    desc:'香港雇主 MPF 账户开设完整流程说明：选择受托人、准备文件清单、提交申请时间线（60天法定截止）、员工登记要求、供款计算规则及秘书公司服务边界说明。',
+    problem:'客户新公司开设时不清楚 MPF 注册流程和截止时间，容易触发法律违规（逾期罚款）。',
+    url:'https://example.com/mpf-guide', date:'2026-05-13', note:'集成在知识库内，可单独打印作为客户交付物。待替换为正式链接。', pinned:false, updatedAt:'2026-05-13' },
+  { id:'t014', name:'合同 Invoice 生成工具', cat:'finance', status:'plan', user:'finance', emoji:'🧾',
+    recommend:'internal', owner:'', dept:'财务', version:'',
+    desc:'根据合同信息自动生成标准格式的 Payment Notice 和 Invoice，支持自定义 Service Period、Description、金额核算、编号规则（如 M8-2026-001 格式）。',
+    problem:'目前 Invoice 制作依赖手工调整格式，容易填错金额或遗漏字段。此工具规范化出单流程。',
+    url:'https://example.com/invoice-tool', date:'2026-04-01', note:'规划中，当前通过 Word 模板手动操作。待替换为正式链接。', pinned:false, updatedAt:'2026-04-01' },
+  { id:'t015', name:'合同编号记录与管理', cat:'finance', status:'plan', user:'finance', emoji:'🔢',
+    recommend:'internal', owner:'', dept:'财务', version:'',
+    desc:'统一管理公司各类合同的编号记录（Payment Notice 编号、Invoice 编号、合同序号），支持按项目/年月筛选，防止重复编号，自动递增生成下一个编号建议。',
+    problem:'合同编号靠人工记忆或 Excel 维护，多人协作时容易重复或遗漏编号，影响财务对账。',
+    url:'https://example.com/contract-numbers', date:'2026-05-21', note:'规划中，优先级中等。待替换为正式链接。', pinned:false, updatedAt:'2026-05-21' },
+  { id:'t016', name:'CMHK 对账自动比对工具', cat:'data', status:'online', user:'me', emoji:'🔍',
+    recommend:'recommended', owner:'Yaowanting', dept:'运营', version:'V1.0',
+    desc:'将 CMHK 下发的对账单与系统内订单数据自动比对，高亮差异，减少人工逐行核对工作量。优化前约 2.5 小时，优化后约 1 小时，年化节省约 900 元。',
+    problem:'每月 CMHK 对账耗时极长，手工比对容易遗漏差异，误差难以定位到具体订单。',
+    url:'https://example.com/cmhk-crm', date:'2026-04-04', note:'集成在自营后台「结算管理」模块。待替换为正式链接。', pinned:false, updatedAt:'2026-04-04' },
+  { id:'t017', name:'内部业务流程优化分析文档', cat:'data', status:'online', user:'mgmt', emoji:'📊',
+    recommend:'internal', owner:'Yaowanting', dept:'管理层', version:'V1.0',
+    desc:'对公司全部7条核心业务流程进行人工成本测算（年化 5.85 万元），识别自动化优先级，制定三阶段优化路线图。涵盖内容运营、咨询办理、CMHK对账、返现审批、售后处理全流程。',
+    problem:'老板希望了解哪些环节可以通过自动化降低人力成本，但缺乏系统性的量化分析。',
+    url:'https://example.com/process-doc', date:'2026-05-08', note:'Word 文档格式，已与老板汇报。待替换为正式链接。', pinned:false, updatedAt:'2026-05-08' },
+  { id:'t018', name:'数据迁移 & 备份工具', cat:'other', status:'online', user:'me', emoji:'💾',
+    recommend:'caution', owner:'Yaowanting', dept:'运营', version:'V1.0',
+    desc:'用于 CMHK 系统版本升级时的数据迁移，可从旧版 localStorage（v6 格式）自动读取订单、返现、日志等数据，转换格式后写入新版系统。也可单独用作一次性备份/恢复。',
+    problem:'系统迭代时担心客户数据丢失，手动迁移容易出错。此工具支持智能检测旧 key 并批量迁移。',
+    url:'https://example.com/migration-tool', date:'2026-04-28', note:'补丁工具，已使用，当前系统版本稳定后可归档。待替换为正式链接。', pinned:false, updatedAt:'2026-04-28' },
+  { id:'t019', name:'小红书 / 社交媒体内容库', cat:'other', status:'update', user:'me', emoji:'📱',
+    recommend:'internal', owner:'Yaowanting', dept:'运营', version:'V1.0',
+    desc:'面向港深通勤族和新来港用户的推广内容库，包含完整文案（新来港完全指南·网络篇、港深通勤成本对比等），附配图建议和发布节奏规划。',
+    problem:'每次写推广内容都需重新构思，缺乏可复用的内容资产。此库沉淀了经过打磨的内容模板。',
+    url:'https://example.com/content-library', date:'2026-03-30', note:'待整理为在线可维护版本。待替换为正式链接。', pinned:false, updatedAt:'2026-03-30' },
+  { id:'t020', name:'售后智能客服知识库', cat:'service', status:'plan', user:'cs', emoji:'🛎️',
+    recommend:'internal', owner:'', dept:'客服', version:'',
+    desc:'面向客服团队的售后处理知识库，涵盖常见客诉场景（停机、返现延迟、合约误解等）的标准话术、处理流程和升级路径。后续可对接 AI 客服进行一级自动分流。',
+    problem:'客服处理售后问题依靠经验积累，新人上手慢，同类问题被反复回答。此知识库标准化处理方式。',
+    url:'https://example.com/cs-kb', date:'2026-05-21', note:'规划中，优先级高。建议尽快落地以减少客服压力。待替换为正式链接。', pinned:false, updatedAt:'2026-05-21' }
+];
 
-var KEY = 'jc_ledger_v1';
+const DEFAULT_LOGS = [
+  { date:'2026-05-21', type:'new', text:'V1.5 上线：新增维护模式、角色快捷入口、推荐程度、维护人、版本号字段，支持 tools.json 外部数据源，发布检查功能。' },
+  { date:'2026-05-21', type:'new', text:'工具导航门户 V1.0 正式上线，整合历史所有工具清单（20个工具）。' },
+  { date:'2026-05-17', type:'update', text:'自营后台系统升级至 v6，新增风控中心、经营看板、取消订单级联处理。' },
+  { date:'2026-05-13', type:'update', text:'内部知识库新增雇主 MPF 注册全流程、AIA 合规指引，Q&A 扩充至 26 条。' },
+  { date:'2026-04-28', type:'done', text:'完成旧系统（v8-5-5）至新版（v3融合版）数据迁移，历史客户数据全部保留。' },
+];
 
-var SEED = {
-  partners:[{
-    id:'P001', name:'张中梁', company:'Joincom HK', email:'',
-    base_salary:100000, sfr:0.016, mfr:0.05, ifr:0.00355, start:'2025-06-01'
-  }],
-  ledger:[
-    {id:'r2506',pid:'P001',period:'2025-06',salary:50000,mpfe:1500,mpfp:0,ins:177.44,sfee:1187.68,due:52865.12,recv:51677.44,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:1187.68,net:50000,date:'2025-07-05',status:'对冲处理',notes:'Jun首月MPF雇员免缴；管理费$1,187.68与后续月份对冲处理'},
-    {id:'r2507',pid:'P001',period:'2025-07',salary:50000,mpfe:1500,mpfp:1500,ins:177.44,sfee:1210.18,due:52887.62,recv:52887.62,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:48500,date:'2025-08-05',status:'已完成',notes:''},
-    {id:'r2508',pid:'P001',period:'2025-08',salary:50000,mpfe:1500,mpfp:1500,ins:177.44,sfee:1210.18,due:52887.62,recv:52887.62,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:48500,date:'2025-09-05',status:'已完成',notes:''},
-    {id:'r2509',pid:'P001',period:'2025-09',salary:50000,mpfe:1500,mpfp:1500,ins:177.44,sfee:1210.18,due:52887.62,recv:52887.62,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:48500,date:'2025-10-05',status:'已完成',notes:'10/23收HKD 158,662.86；预付10月+11月；余额$2,274.04转抵'},
-    {id:'r2510',pid:'P001',period:'2025-10',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:-2274.04,net:98500,date:'2025-11-05',status:'预付有余',notes:'薪资调整至$100,000；Sep预付余额$2,274.04已抵扣'},
-    {id:'r2511',pid:'P001',period:'2025-11',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:98500,date:'2025-12-05',status:'已完成',notes:''},
-    {id:'r2512',pid:'P001',period:'2025-12',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:98500,date:'2026-01-05',status:'已完成',notes:''},
-    {id:'r2601',pid:'P001',period:'2026-01',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:98500,date:'2026-02-05',status:'已完成',notes:''},
-    {id:'r2602',pid:'P001',period:'2026-02',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:103501.20,ccy:'HKD',cny:null,rate:null,hkdeq:null,vari:0,net:98500,date:'2026-03-05',status:'已完成',notes:''},
-    {id:'r2603',pid:'P001',period:'2026-03',salary:100000,mpfe:1500,mpfp:1500,ins:354.88,sfee:1646.32,due:103501.20,recv:102868.90,ccy:'CNY',cny:90000,rate:0.875,hkdeq:102868.90,vari:632.30,net:98500,date:'2026-04-05',status:'差额待追',notes:'CNY付款：¥90,000，按2026-04-09汇率折算HKD 102,868.90；差额HKD 632.30本月补齐'}
-  ]
+// ============================================================
+// CONSTANTS
+// ============================================================
+const ADMIN_PW = 'joincom2026';
+
+const CAT_MAP = {
+  cmhk:    { label:'CMHK 业务管理',     emoji:'📱', cls:'cat-cmhk' },
+  rebate:  { label:'返现 / 活动管理',    emoji:'💰', cls:'cat-rebate' },
+  channel: { label:'渠道合作与客户转化', emoji:'🤝', cls:'cat-channel' },
+  kb:      { label:'内部知识库',         emoji:'📚', cls:'cat-kb' },
+  hr:      { label:'行政人事工具',       emoji:'👥', cls:'cat-hr' },
+  finance: { label:'财务 / 合同 / 编号', emoji:'🧾', cls:'cat-finance' },
+  service: { label:'售后服务支持',       emoji:'🛎️', cls:'cat-service' },
+  data:    { label:'运营数据与分析',     emoji:'📊', cls:'cat-data' },
+  other:   { label:'其他工具',           emoji:'🔧', cls:'cat-other' },
+  plan:    { label:'待规划工具',         emoji:'🗓️', cls:'cat-plan' },
 };
 
-// ── load data ──
-function load(){
-  try{
-    var raw = localStorage.getItem(KEY);
-    if(raw){
-      var d = JSON.parse(raw);
-      if(d && d.partners && d.partners.length > 0) return d;
+const STATUS_MAP = {
+  online: { label:'已上线', cls:'badge-status-online', dot:'dot-online' },
+  test:   { label:'测试中', cls:'badge-status-test',   dot:'dot-test' },
+  update: { label:'待更新', cls:'badge-status-update', dot:'dot-update' },
+  plan:   { label:'规划中', cls:'badge-status-plan',   dot:'dot-plan' },
+};
+
+const RECOMMEND_MAP = {
+  recommended: { label:'推荐使用', cls:'badge-rec-recommended', icon:'⭐' },
+  internal:    { label:'内部测试', cls:'badge-rec-internal',    icon:'🔵' },
+  caution:     { label:'谨慎使用', cls:'badge-rec-caution',     icon:'⚠️' },
+  archived:    { label:'已归档',   cls:'badge-rec-archived',    icon:'📦' },
+};
+
+const USER_MAP = {
+  me:'我自己', cs:'客服团队', channel:'渠道伙伴',
+  finance:'财务', hr:'行政人事', mgmt:'管理层', all:'全员',
+};
+
+// Role → which user values match
+const ROLE_FILTER = {
+  cs:      { label:'我是客服',     icon:'🎧', users:['cs','all'] },
+  finance: { label:'我是财务',     icon:'💼', users:['finance','all'] },
+  hr:      { label:'我是行政',     icon:'👥', users:['hr','all'] },
+  mgmt:    { label:'我是管理层',   icon:'👔', users:['mgmt','all','me'] },
+  channel: { label:'我是渠道对接', icon:'🤝', users:['channel','all'] },
+  newbie:  { label:'我是新人',     icon:'🌱', users:['all','cs','hr'] },
+};
+
+// ============================================================
+// STATE
+// ============================================================
+const STATE = {
+  tools: [],
+  logs: [],
+  currentCat: 'all',
+  searchQuery: '',
+  filterStatus: 'all',
+  filterUser: 'all',
+  filterRecommend: 'all',
+  activeRole: null,
+  adminMode: false,
+  dataSource: 'default', // 'json' | 'local' | 'default'
+};
+
+// ============================================================
+// INIT
+// ============================================================
+async function init() {
+  await loadData();
+  updateNavCounts();
+  render();
+  // mobile menu
+  if (window.innerWidth <= 768) document.getElementById('menuBtn').style.display = 'flex';
+  window.addEventListener('resize', () => {
+    document.getElementById('menuBtn').style.display = window.innerWidth <= 768 ? 'flex' : 'none';
+  });
+  // modal overlay click-to-close
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+  });
+}
+
+async function loadData() {
+  // 1. Try external tools.json
+  try {
+    const resp = await fetch('./tools.json', { cache: 'no-cache' });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.tools && Array.isArray(data.tools)) {
+        STATE.tools = data.tools;
+        STATE.logs = data.logs || STATE.logs || [];
+        STATE.dataSource = 'json';
+        showDatasourceTag('json', 'tools.json');
+        return;
+      }
     }
-  }catch(e){}
-  var fresh = JSON.parse(JSON.stringify(SEED));
-  try{ localStorage.setItem(KEY, JSON.stringify(fresh)); }catch(e){}
-  return fresh;
-}
-function save(d){ try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){} }
+  } catch (e) { /* fetch failed — fallback */ }
 
-// ── helpers ──
-function esc(v){ return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function fmt(n,d){ d=d||2; if(n===null||n===undefined||isNaN(n)) return '—'; return Number(n).toLocaleString('en-HK',{minimumFractionDigits:d,maximumFractionDigits:d}); }
-function fmtPer(p){ if(!p) return '—'; var parts=p.split('-'); var ms=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return ms[parseInt(parts[1])-1]+'-'+parts[0].slice(2); }
-function fmtPerLong(p){ if(!p) return '—'; var parts=p.split('-'); var ms=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']; return parts[0]+'年'+ms[parseInt(parts[1])-1]; }
-function invNo(p){ return 'JC-'+(p||'').replace('-',''); }
-function todayStr(){ var d=new Date(); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'; }
-function pillCls(s){ return {'已完成':'p-ok','差额待追':'p-err','预付有余':'p-info','对冲处理':'p-purple','待收款':'p-amber'}[s]||'p-amber'; }
-function rowCls(s){ return {'已完成':'r-ok','差额待追':'r-err','预付有余':'r-info','对冲处理':'r-purple','待收款':'r-amber'}[s]||'r-amber'; }
-function iPillCls(s){ return {'已完成':'ip-ok','差额待追':'ip-err','预付有余':'ip-info','对冲处理':'ip-purple','待收款':'ip-amber'}[s]||'ip-amber'; }
-function autoStatus(due,recv,v){ if(!recv) return '待收款'; if(Math.abs(v)<0.01) return '已完成'; return v>0?'差额待追':'预付有余'; }
-
-var D = load();
-var selPid = D.partners[0] ? D.partners[0].id : null;
-var editId = null;
-var ccy = 'HKD';
-
-function getLedger(){ return D.ledger.filter(function(r){return r.pid===selPid;}).sort(function(a,b){return b.period.localeCompare(a.period);}); }
-
-// ── render partners ──
-function renderPartners(){
-  var html = D.partners.map(function(p){
-    return '<div class="pi'+(p.id===selPid?' on':'')+'" data-id="'+esc(p.id)+'">'
-      +'<div class="pi-av">'+esc(p.name[0])+'</div>'
-      +'<div style="flex:1;min-width:0"><div class="pi-name">'+esc(p.name)+'</div><div class="pi-co">'+esc(p.company)+'</div></div>'
-      +'<div class="pi-dot"></div></div>';
-  }).join('');
-  document.getElementById('plist').innerHTML = html;
-  document.querySelectorAll('.pi').forEach(function(el){
-    el.addEventListener('click', function(){ selPid=el.dataset.id; renderAll(); });
-  });
-}
-
-// ── render stats ──
-function renderStats(){
-  var recs = getLedger();
-  var tDue=0,tRecv=0,tSfee=0,tNet=0,tDiff=0;
-  recs.forEach(function(r){ tDue+=Number(r.due||0); tRecv+=Number(r.recv||0); tSfee+=Number(r.sfee||0); tNet+=Number(r.net||0); if(r.status==='差额待追') tDiff+=Number(r.vari||0); });
-  document.getElementById('stats').innerHTML =
-    '<div class="sc ck"><div class="sc-lbl">累计应收</div><div class="sc-val">HK$'+fmt(tDue,0)+'</div><div class="sc-sub">'+recs.length+' 个服务月</div></div>'
-    +'<div class="sc cg"><div class="sc-lbl">累计实收</div><div class="sc-val ok">HK$'+fmt(tRecv,0)+'</div><div class="sc-sub">含MPF+险+管理费</div></div>'
-    +'<div class="sc cb"><div class="sc-lbl">累计管理费</div><div class="sc-val">HK$'+fmt(tSfee,0)+'</div><div class="sc-sub">JOINCOM管理收入</div></div>'
-    +'<div class="sc cp"><div class="sc-lbl">累计净发薪资</div><div class="sc-val">HK$'+fmt(tNet,0)+'</div><div class="sc-sub">扣MPF雇员后实发</div></div>'
-    +'<div class="sc '+(tDiff>0?'cr':'cg')+'"><div class="sc-lbl">当前差额</div><div class="sc-val '+(tDiff>0?'err':'ok')+'">'+(tDiff>0?'HK$'+fmt(tDiff):'已清零')+'</div><div class="sc-sub">'+(tDiff>0?'差额待追':'账目平衡')+'</div></div>';
-}
-
-// ── render profile strip ──
-function renderProfile(){
-  var p = D.partners.filter(function(x){return x.id===selPid;})[0];
-  var el = document.getElementById('pstrip');
-  if(!p){ el.classList.remove('show'); document.getElementById('pg-title').textContent='薪酬管理台账'; document.getElementById('pg-sub').textContent='选择左侧合作伙伴'; return; }
-  el.classList.add('show');
-  document.getElementById('pg-title').textContent = p.name+' — 月度台账';
-  document.getElementById('pg-sub').textContent = p.company+' · 服务开始 '+p.start;
-  el.innerHTML = '<div class="pf"><div class="pf-lbl">姓名</div><div class="pf-val">'+esc(p.name)+'</div></div><div class="pf-sep"></div>'
-    +'<div class="pf"><div class="pf-lbl">公司</div><div class="pf-val">'+esc(p.company)+'</div></div><div class="pf-sep"></div>'
-    +'<div class="pf"><div class="pf-lbl">当前薪资基数</div><div class="pf-val">HK$'+fmt(p.base_salary,0)+'</div></div><div class="pf-sep"></div>'
-    +'<div class="pf"><div class="pf-lbl">服务开始</div><div class="pf-val">'+esc(p.start)+'</div></div><div class="pf-sep"></div>'
-    +'<div class="pf"><div class="pf-lbl">管理费率</div><div class="pf-val">'+(p.sfr*100).toFixed(1)+'%</div></div>';
-}
-
-// ── render ledger ──
-function renderLedger(){
-  var recs = getLedger();
-  document.getElementById('rec-cnt').textContent = recs.length ? recs.length+' 条记录' : '';
-  var body = document.getElementById('tbody');
-  if(!recs.length){ body.innerHTML='<tr><td colspan="14" class="empty">暂无台账记录，点击「新增月份」添加</td></tr>'; return; }
-  body.innerHTML = recs.map(function(r){
-    return '<tr class="'+rowCls(r.status)+'" data-id="'+esc(r.id)+'">'
-      +'<td class="pcell la">'+fmtPer(r.period)+'</td>'
-      +'<td>'+fmt(r.salary,0)+'</td>'
-      +'<td>'+fmt(r.mpfe,0)+'</td>'
-      +'<td class="'+(r.mpfp===0?'dim':'')+'">'+(r.mpfp===0?'— 首月':fmt(r.mpfp,0))+'</td>'
-      +'<td>'+fmt(r.ins)+'</td>'
-      +'<td>'+fmt(r.sfee)+'</td>'
-      +'<td>'+fmt(r.due)+'</td>'
-      +'<td>'+fmt(r.recv)+(r.ccy==='CNY'?'<span class="cny-tag">CNY</span>':'')+'</td>'
-      +'<td class="'+(r.vari>0?'vp':r.vari<0?'vn':'vz')+'">'+(r.vari===0?'—':r.vari>0?'▲'+fmt(r.vari):'▼'+fmt(Math.abs(r.vari)))+'</td>'
-      +'<td>'+fmt(r.net,0)+'</td>'
-      +'<td class="dim" style="font-size:12px">'+(r.date||'—')+'</td>'
-      +'<td><span class="pill '+pillCls(r.status)+'">'+esc(r.status)+'</span></td>'
-      +'<td class="note-cell la" title="'+esc(r.notes)+'">'+(esc(r.notes)||'—')+'</td>'
-      +'<td class="ctr"><button class="btn-inv" data-inv="'+esc(r.id)+'">📄 账单</button></td>'
-      +'</tr>';
-  }).join('');
-  body.querySelectorAll('tr[data-id]').forEach(function(row){
-    row.addEventListener('click', function(e){ if(!e.target.classList.contains('btn-inv')) openEdit(row.dataset.id); });
-  });
-  body.querySelectorAll('.btn-inv').forEach(function(btn){
-    btn.addEventListener('click', function(e){ e.stopPropagation(); openInvoice(btn.dataset.inv); });
-  });
-}
-
-function renderAll(){ renderPartners(); renderStats(); renderProfile(); renderLedger(); }
-
-// ── form calc ──
-function calcForm(){
-  var s=parseFloat(document.getElementById('f-salary').value)||0;
-  var me=parseFloat(document.getElementById('f-mpfe').value)||0;
-  var mp=parseFloat(document.getElementById('f-mpfp').value)||0;
-  var ins=parseFloat(document.getElementById('f-ins').value)||0;
-  var sf=parseFloat(document.getElementById('f-sfee').value)||0;
-  var due=s+me+ins+sf;
-  var net=s-mp;
-  document.getElementById('f-due').value=due.toFixed(2);
-  document.getElementById('f-net').value=net.toFixed(2);
-  if(ccy==='CNY'){
-    var cn=parseFloat(document.getElementById('f-cny').value)||0;
-    var rt=parseFloat(document.getElementById('f-rate').value)||0;
-    if(cn&&rt){ var eq=cn/rt; document.getElementById('f-hkdeq').value=eq.toFixed(2); document.getElementById('f-recv').value=eq.toFixed(2); }
+  // 2. Try localStorage
+  const saved = localStorage.getItem('jc_portal_tools');
+  const savedLogs = localStorage.getItem('jc_portal_logs');
+  if (saved) {
+    STATE.tools = JSON.parse(saved);
+    STATE.logs = savedLogs ? JSON.parse(savedLogs) : JSON.parse(JSON.stringify(DEFAULT_LOGS));
+    STATE.dataSource = 'local';
+    showDatasourceTag('local', 'localStorage');
+    return;
   }
-  var recv=parseFloat(document.getElementById('f-recv').value)||0;
-  var v=parseFloat((due-recv).toFixed(2));
-  document.getElementById('f-var').value=v.toFixed(2);
-  var hint=document.getElementById('f-var-hint');
-  if(v>0.01){hint.textContent='差额待追';hint.style.color='var(--err)';}
-  else if(v<-0.01){hint.textContent='预付有余';hint.style.color='var(--info)';}
-  else{hint.textContent='已平账 ✓';hint.style.color='var(--ok)';}
-  document.getElementById('f-status').value=autoStatus(due,recv,v);
+
+  // 3. Fall back to defaults
+  STATE.tools = JSON.parse(JSON.stringify(DEFAULT_TOOLS));
+  STATE.logs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+  STATE.dataSource = 'default';
+  showDatasourceTag('default', '内置默认');
 }
 
-function setCcy(c){
-  ccy=c;
-  document.querySelectorAll('.ccy-sw button').forEach(function(b){b.classList.toggle('on',b.dataset.c===c);});
-  document.getElementById('cny-row').classList.toggle('show',c==='CNY');
-  document.getElementById('hkd-grp').style.display=c==='CNY'?'none':'';
-  calcForm();
+function showDatasourceTag(type, label) {
+  const el = document.getElementById('datasourceTag');
+  el.style.display = 'inline-flex';
+  const cls = { json:'json', local:'local', default:'default' }[type] || 'default';
+  el.className = `datasource-tag ${cls}`;
+  const icons = { json:'📄', local:'💾', default:'📦' };
+  el.textContent = `${icons[type] || '📦'} ${label}`;
 }
 
-['f-salary','f-mpfe','f-mpfp','f-ins','f-sfee','f-recv','f-cny','f-rate'].forEach(function(id){
-  document.getElementById(id).addEventListener('input',calcForm);
-});
-document.querySelector('.ccy-sw').addEventListener('click',function(e){if(e.target.dataset.c) setCcy(e.target.dataset.c);});
-
-// ── open/close record modal ──
-function openAdd(){
-  if(!selPid){alert('请先选择合作伙伴');return;}
-  editId=null;
-  document.getElementById('m-title').textContent='新增月度记录';
-  document.getElementById('btn-del').style.display='none';
-  document.getElementById('rec-form').reset();
-  var p=D.partners.filter(function(x){return x.id===selPid;})[0];
-  if(p){ document.getElementById('f-salary').value=p.base_salary; document.getElementById('f-ins').value=(p.base_salary*p.ifr).toFixed(2); document.getElementById('f-sfee').value=(p.base_salary*p.sfr).toFixed(2); }
-  var recs=D.ledger.filter(function(r){return r.pid===selPid;}).sort(function(a,b){return b.period.localeCompare(a.period);});
-  if(recs.length){var parts=recs[0].period.split('-').map(Number);var nm=parts[1]===12?1:parts[1]+1;var ny=parts[1]===12?parts[0]+1:parts[0];document.getElementById('f-period').value=ny+'-'+String(nm).padStart(2,'0');}
-  else{var n=new Date();document.getElementById('f-period').value=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');}
-  setCcy('HKD'); calcForm();
-  document.getElementById('rec-modal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-
-function openEdit(rid){
-  var r=D.ledger.filter(function(x){return x.id===rid;})[0]; if(!r) return;
-  editId=rid;
-  document.getElementById('m-title').textContent='编辑月度记录';
-  document.getElementById('btn-del').style.display='';
-  document.getElementById('f-period').value=r.period;
-  document.getElementById('f-salary').value=r.salary;
-  document.getElementById('f-mpfe').value=r.mpfe;
-  document.getElementById('f-mpfp').value=r.mpfp;
-  document.getElementById('f-ins').value=r.ins;
-  document.getElementById('f-sfee').value=r.sfee;
-  document.getElementById('f-due').value=r.due;
-  document.getElementById('f-net').value=r.net;
-  document.getElementById('f-date').value=r.date||'';
-  document.getElementById('f-status').value=r.status;
-  document.getElementById('f-notes').value=r.notes||'';
-  setCcy(r.ccy||'HKD');
-  if(r.ccy==='CNY'){ document.getElementById('f-cny').value=r.cny||''; document.getElementById('f-rate').value=r.rate||''; document.getElementById('f-hkdeq').value=r.hkdeq||''; }
-  document.getElementById('f-recv').value=r.recv||'';
-  document.getElementById('f-var').value=r.vari;
-  document.getElementById('rec-modal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-
-function closeRec(){ document.getElementById('rec-modal').classList.remove('open'); document.body.style.overflow=''; editId=null; }
-
-document.getElementById('rec-form').addEventListener('submit',function(e){
-  e.preventDefault();
-  var p=D.partners.filter(function(x){return x.id===selPid;})[0]; if(!p){alert('请选择伙伴');return;}
-  var period=document.getElementById('f-period').value;
-  var rec={
-    id: editId||('r'+period.replace('-','')+'x'+Date.now().toString().slice(-3)),
-    pid:selPid, period:period,
-    salary:parseFloat(document.getElementById('f-salary').value)||0,
-    mpfe:parseFloat(document.getElementById('f-mpfe').value)||0,
-    mpfp:parseFloat(document.getElementById('f-mpfp').value)||0,
-    ins:parseFloat(document.getElementById('f-ins').value)||0,
-    sfee:parseFloat(document.getElementById('f-sfee').value)||0,
-    due:parseFloat(document.getElementById('f-due').value)||0,
-    net:parseFloat(document.getElementById('f-net').value)||0,
-    recv:parseFloat(document.getElementById('f-recv').value)||0,
-    vari:parseFloat(document.getElementById('f-var').value)||0,
-    ccy:ccy,
-    cny:ccy==='CNY'?parseFloat(document.getElementById('f-cny').value)||null:null,
-    rate:ccy==='CNY'?parseFloat(document.getElementById('f-rate').value)||null:null,
-    hkdeq:ccy==='CNY'?parseFloat(document.getElementById('f-hkdeq').value)||null:null,
-    date:document.getElementById('f-date').value,
-    status:document.getElementById('f-status').value,
-    notes:document.getElementById('f-notes').value.trim()
-  };
-  if(editId){ var idx=D.ledger.findIndex(function(x){return x.id===editId;}); if(idx>=0) D.ledger[idx]=rec; }
-  else{
-    if(D.ledger.some(function(x){return x.pid===selPid&&x.period===period;})){ alert('该月份已有记录'); return; }
-    D.ledger.push(rec);
+function saveData() {
+  localStorage.setItem('jc_portal_tools', JSON.stringify(STATE.tools));
+  localStorage.setItem('jc_portal_logs', JSON.stringify(STATE.logs));
+  if (STATE.dataSource !== 'json') {
+    STATE.dataSource = 'local';
+    showDatasourceTag('local', 'localStorage');
   }
-  save(D); closeRec(); renderAll();
-});
+}
 
-document.getElementById('btn-del').addEventListener('click',function(){
-  if(!editId||!confirm('确定删除？')) return;
-  D.ledger=D.ledger.filter(function(x){return x.id!==editId;}); save(D); closeRec(); renderAll();
-});
-document.getElementById('btn-add-rec').addEventListener('click',openAdd);
-document.getElementById('m-close').addEventListener('click',closeRec);
-document.getElementById('btn-cancel').addEventListener('click',closeRec);
-document.getElementById('rec-modal').addEventListener('click',function(e){if(e.target===this)closeRec();});
-
-// ── partner modal ──
-function openPM(){ document.getElementById('pm-modal').classList.add('open'); document.body.style.overflow='hidden'; }
-function closePM(){ document.getElementById('pm-modal').classList.remove('open'); document.body.style.overflow=''; }
-document.getElementById('btn-np').addEventListener('click',openPM);
-document.getElementById('pm-x').addEventListener('click',closePM);
-document.getElementById('pm-cancel').addEventListener('click',closePM);
-document.getElementById('pm-modal').addEventListener('click',function(e){if(e.target===this)closePM();});
-document.getElementById('pm-form').addEventListener('submit',function(e){
-  e.preventDefault();
-  var id='P'+String(D.partners.length+1).padStart(3,'0');
-  D.partners.push({id:id,name:document.getElementById('pm-name').value.trim(),company:document.getElementById('pm-co').value.trim(),email:document.getElementById('pm-email').value.trim(),base_salary:parseFloat(document.getElementById('pm-sal').value)||0,sfr:parseFloat(document.getElementById('pm-sfr').value)||0.016,mfr:parseFloat(document.getElementById('pm-mfr').value)||0.05,ifr:parseFloat(document.getElementById('pm-ifr').value)||0.00355,start:document.getElementById('pm-start').value});
-  selPid=id; save(D); closePM(); renderAll();
-});
-
-// ── invoice overlay ──
-function openInvoice(rid){
-  var r=D.ledger.filter(function(x){return x.id===rid;})[0]; if(!r) return;
-  var partner=D.partners.filter(function(x){return x.id===r.pid;})[0]; if(!partner) return;
-  var due=Number(r.due)||0, recv=Number(r.recv)||0, bal=due-recv;
-  var isOk=Math.abs(bal)<0.01, isCredit=bal<-0.01;
-  var payLine = recv>0
-    ? (r.ccy==='CNY'
-        ? 'CNY ¥'+fmt(r.cny,0)+' @ '+r.rate+' → HKD '+fmt(r.hkdeq)
-        : 'HKD '+fmt(recv))
-    : '暂无付款记录';
-  document.getElementById('inv-body').innerHTML =
-    '<div class="i-head">'
-      +'<div><div class="i-co-name">聚客中国有限公司</div><div class="i-co-en">JOINCOM CHINA LIMITED</div><div class="i-co-tag">综合人力资源服务</div></div>'
-      +'<div class="i-meta"><div class="i-meta-lbl">Monthly Statement</div><div class="i-meta-no">'+invNo(r.period)+'</div><div class="i-meta-date">出单日期：'+todayStr()+'</div></div>'
-    +'</div>'
-    +'<div class="i-gold"></div>'
-    +'<div class="i-parties">'
-      +'<div><div class="i-p-lbl">收件方</div><div class="i-p-name">'+esc(partner.name)+' 先生</div><div class="i-p-det">'+esc(partner.company)+'</div><div class="i-badge">服务期：'+fmtPerLong(r.period)+'</div></div>'
-      +'<div><div class="i-p-lbl">服务方</div><div class="i-p-name">聚客中国有限公司</div><div class="i-p-det">JOINCOM CHINA LIMITED<br>CMHK一级分销商<br>综合人力资源服务提供方</div></div>'
-    +'</div>'
-    +'<div class="i-sec">服务明细</div>'
-    +'<table class="i-tbl"><thead><tr><th>服务项目</th><th>说明</th><th>金额 HKD</th></tr></thead><tbody>'
-      +'<tr><td>薪酬代管</td><td style="font-size:11.5px;color:#9ca3af">基本薪资（税前）</td><td>'+fmt(r.salary,0)+'</td></tr>'
-      +'<tr><td>强积金（雇主供款）</td><td style="font-size:11.5px;color:#9ca3af">MPF Employer</td><td>'+fmt(r.mpfe,0)+'</td></tr>'
-      +'<tr><td>强积金（雇员代扣）</td><td style="font-size:11.5px;color:#9ca3af">MPF Employee'+(r.mpfp===0?' · 首月免缴':'')+'</td><td>'+(r.mpfp===0?'—':fmt(r.mpfp,0))+'</td></tr>'
-      +'<tr><td>劳工强制保险</td><td style="font-size:11.5px;color:#9ca3af">Employees Compensation</td><td>'+fmt(r.ins)+'</td></tr>'
-      +'<tr><td>综合管理费</td><td style="font-size:11.5px;color:#9ca3af">Management Fee</td><td>'+fmt(r.sfee)+'</td></tr>'
-    +'</tbody><tfoot><tr class="i-total"><td colspan="2" style="color:var(--navy)">应付总额</td><td>'+fmt(due)+'</td></tr></tfoot></table>'
-    +'<div class="i-sec">收款记录</div>'
-    +'<div class="i-pay">'
-      +'<div class="i-pr"><span class="i-pl">'+(r.date||'—')+'</span><span class="i-pv">'+payLine+'</span></div>'
-      +'<div class="i-bal"><span style="color:#6b7280;font-weight:400">实收合计</span><span style="font-variant-numeric:tabular-nums">HKD '+fmt(recv)+'</span></div>'
-      +(!isOk?'<div class="i-bal" style="margin-top:6px;padding-top:6px;border-top:1px solid #e5e7eb"><span>'+(isCredit?'预付余额':'尚欠金额')+'</span><span style="color:'+(isCredit?'var(--ok)':'var(--err)')+'">HKD '+fmt(Math.abs(bal))+'</span></div>':'')
-    +'</div>'
-    +'<div class="i-pout"><div><div class="i-pout-l">薪酬发放（已到账）</div><div class="i-pout-d">每月10日前到账</div></div><div class="i-pout-a">HKD '+fmt(r.net,0)+'</div></div>'
-    +'<div class="i-status-row"><span class="i-pill '+iPillCls(r.status)+'">'+esc(r.status)+'</span><div class="i-note">本账单由 JOINCOM CHINA LIMITED 出具<br>如有疑问请联系您的专属服务顾问</div></div>';
-
-  // mail button
-  var subj = encodeURIComponent('JOINCOM 月度结算单 · '+fmtPerLong(r.period)+' · '+invNo(r.period));
-  var body = encodeURIComponent(partner.name+' 先生，您好！\n\n以下为您 '+fmtPerLong(r.period)+' 的月度结算单，请查收。\n\n账单编号：'+invNo(r.period)+'\n\n【服务明细】\n薪资基数：    HKD '+fmt(r.salary,0)+'\nMPF雇主：    HKD '+fmt(r.mpfe,0)+'\nMPF雇员：    '+(r.mpfp===0?'— 首月免缴':'HKD '+fmt(r.mpfp,0))+'\n劳工险：     HKD '+fmt(r.ins)+'\n综合管理费：  HKD '+fmt(r.sfee)+'\n应付总额：    HKD '+fmt(due)+'\n\n【收款情况】\n'+payLine+'\n实收：HKD '+fmt(recv)+'\n'+(isOk?'账目已结清 ✓':(isCredit?'预付余额：HKD '+fmt(Math.abs(bal)):'尚欠：HKD '+fmt(Math.abs(bal))))+'\n\n【薪资发放】\n净薪资：HKD '+fmt(r.net,0)+'（每月10日前到账）\n\n聚客中国有限公司（JOINCOM CHINA LIMITED）\n如有疑问请回复此邮件。');
-  var email = partner.email||'';
-  var mailBtn = document.getElementById('ib-mail');
-  if(email){
-    mailBtn.textContent = '✉ 发给 '+partner.name;
-    mailBtn.onclick = function(){ window.location.href='mailto:'+email+'?subject='+subj+'&body='+body; };
+// ============================================================
+// ADMIN MODE
+// ============================================================
+function toggleAdminMode() {
+  if (STATE.adminMode) {
+    // Exit
+    STATE.adminMode = false;
+    document.body.classList.remove('admin-mode');
+    document.getElementById('adminModeBtn').textContent = '🔧 维护模式';
+    toast('已退出维护模式', 'info');
   } else {
-    mailBtn.textContent = '✉ 输入邮箱发送';
-    mailBtn.onclick = function(){
-      var addr=prompt('请输入'+partner.name+'的邮箱：');
-      if(addr&&addr.indexOf('@')>0){ partner.email=addr; save(D); window.location.href='mailto:'+addr+'?subject='+subj+'&body='+body; }
-    };
+    // Enter — show password modal
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwError').style.display = 'none';
+    document.getElementById('pwModal').classList.add('open');
+    setTimeout(() => document.getElementById('pwInput').focus(), 100);
   }
-
-  document.getElementById('inv-ov').classList.add('open');
-  document.body.style.overflow='hidden';
 }
 
-function closeInvoice(){ document.getElementById('inv-ov').classList.remove('open'); document.body.style.overflow=''; }
+function verifyPw() {
+  const pw = document.getElementById('pwInput').value;
+  if (pw === ADMIN_PW) {
+    STATE.adminMode = true;
+    document.body.classList.add('admin-mode');
+    document.getElementById('adminModeBtn').textContent = '🔒 退出维护';
+    closeModal('pwModal');
+    toast('已进入维护模式 🔧', 'success');
+  } else {
+    document.getElementById('pwError').style.display = 'block';
+    document.getElementById('pwInput').select();
+  }
+}
 
-document.getElementById('ib-close').addEventListener('click',closeInvoice);
-document.getElementById('inv-ov').addEventListener('click',function(e){if(e.target===this)closeInvoice();});
-document.getElementById('ib-print').addEventListener('click',function(){
-  var w=window.open('','_blank');
-  var co='<style>body{font-family:system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}';
-  co+=document.querySelector('style').textContent;
-  co+='</style>';
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>薪酬管理台账 | JOINCOM</title>'+co+'</head><body style="padding:24px">');
-  w.document.write(document.getElementById('inv-body').innerHTML);
-  w.document.write('<div style="margin-top:16px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:11px;color:#9ca3af">聚客中国有限公司 JOINCOM CHINA LIMITED · CMHK一级授权分销商</div>');
-  w.document.write('</body></html>');
-  w.document.close();
-  setTimeout(function(){w.print();},500);
-});
+// ============================================================
+// RENDER
+// ============================================================
+function render() {
+  const container = document.getElementById('mainContent');
+  let tools = getFilteredTools();
+  let html = '';
 
-// toast
-function toast(msg){ var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');},3000); }
+  // Notice bar (only on all/home view, not search)
+  if (STATE.currentCat === 'all' && !STATE.searchQuery) {
+    html += `<div class="notice-bar info">ℹ️ <span>工具链接仅供内部使用。修改数据后需<strong>导出 tools.json 并上传</strong>，或重新发布 HTML，同事才能看到最新版本。</span></div>`;
+  }
 
-renderAll();
+  // Stats bar
+  html += renderStatsBar();
 
-})();
+  // Role quick entry
+  html += renderRoleBar();
+
+  // Dashboard widgets (only on main all-view)
+  if (STATE.currentCat === 'all' && !STATE.searchQuery && STATE.filterStatus === 'all' && STATE.filterUser === 'all' && !STATE.activeRole) {
+    html += renderDashboard();
+  }
+
+  // Filter bar
+  html += renderFilterBar(tools.length);
+
+  // Content
+  if (STATE.currentCat === 'all' && !STATE.searchQuery && STATE.filterStatus === 'all' && STATE.filterUser === 'all' && !STATE.activeRole && STATE.filterRecommend === 'all') {
+    html += renderGroupedView();
+  } else {
+    html += renderFlatView(tools);
+  }
+
+  container.innerHTML = html;
+  bindFilterSelects();
+}
+
+function renderStatsBar() {
+  const total = STATE.tools.length;
+  const online = STATE.tools.filter(t => t.status === 'online').length;
+  const planCount = STATE.tools.filter(t => t.status === 'plan').length;
+  const pinned = STATE.tools.filter(t => t.pinned).length;
+  const noLink = STATE.tools.filter(t => isNoLink(t)).length;
+  const cats = new Set(STATE.tools.map(t => t.cat)).size;
+  return `<div class="stats-bar">
+    <div class="stat-card blue"><div class="stat-icon">🛠️</div><div><div class="stat-val">${total}</div><div class="stat-lbl">工具总数</div></div></div>
+    <div class="stat-card green"><div class="stat-icon">✅</div><div><div class="stat-val">${online}</div><div class="stat-lbl">已上线</div></div></div>
+    <div class="stat-card gray"><div class="stat-icon">🗓️</div><div><div class="stat-val">${planCount}</div><div class="stat-lbl">规划中</div></div></div>
+    <div class="stat-card yellow"><div class="stat-icon">📌</div><div><div class="stat-val">${pinned}</div><div class="stat-lbl">常用工具</div></div></div>
+    <div class="stat-card red"><div class="stat-icon">🔗</div><div><div class="stat-val">${noLink}</div><div class="stat-lbl">待补链接</div></div></div>
+    <div class="stat-card purple"><div class="stat-icon">🏷️</div><div><div class="stat-val">${cats}</div><div class="stat-lbl">项目分类</div></div></div>
+  </div>`;
+}
+
+function renderRoleBar() {
+  const btns = Object.entries(ROLE_FILTER).map(([key, r]) =>
+    `<button class="role-btn ${STATE.activeRole === key ? 'active' : ''}" onclick="setRole('${key}')">
+      <span class="role-icon">${r.icon}</span>${r.label}
+    </button>`
+  ).join('');
+  const clearBtn = STATE.activeRole
+    ? `<button class="role-btn" onclick="setRole(null)" style="border-color:var(--red);color:var(--red)">✕ 清除角色</button>`
+    : '';
+  return `<div class="role-bar">
+    <div class="role-bar-title"><span>按角色快速查看：</span>选择你的角色，自动筛选适合你的工具</div>
+    <div class="role-btns">${btns}${clearBtn}</div>
+  </div>`;
+}
+
+function renderDashboard() {
+  const today = new Date().toISOString().slice(0, 10);
+  const thirtyDaysAgo = new Date(Date.now() - 30*24*3600*1000).toISOString().slice(0,10);
+
+  // Recent 4
+  const recent = [...STATE.tools].sort((a,b) => (b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,4);
+  const recentHtml = recent.length
+    ? recent.map(t => `<div class="dash-tool-row" onclick="scrollToCard('${t.id}')">
+        <div class="dash-tool-dot ${STATUS_MAP[t.status]?.dot||''}"></div>
+        <span class="dash-tool-name">${t.emoji||''} ${t.name}</span>
+        <span class="dash-tool-meta">${t.updatedAt||''}</span>
+      </div>`).join('')
+    : '<div class="dash-empty">暂无数据</div>';
+
+  // This week recommended (recommend=recommended, online)
+  const weekRec = STATE.tools.filter(t => t.recommend === 'recommended' && t.status === 'online').slice(0,4);
+  const weekRecHtml = weekRec.length
+    ? weekRec.map(t => `<div class="dash-tool-row" onclick="scrollToCard('${t.id}')">
+        <span style="font-size:15px">${t.emoji||'🔧'}</span>
+        <span class="dash-tool-name">${t.name}</span>
+        <span class="dash-tool-meta">${CAT_MAP[t.cat]?.emoji||''}</span>
+      </div>`).join('')
+    : '<div class="dash-empty">暂无推荐工具</div>';
+
+  // No link warnings
+  const noLinkTools = STATE.tools.filter(t => isNoLink(t));
+  const noLinkHtml = noLinkTools.length
+    ? noLinkTools.slice(0,5).map(t => `<div class="warn-item" onclick="STATE.adminMode&&openEditModal('${t.id}')">
+        <span class="warn-item-icon">🔗</span>
+        <span class="warn-item-text"><strong>${t.name}</strong> — 待补正式链接</span>
+      </div>`).join('')
+    : '<div class="dash-empty">✅ 所有工具链接已填写</div>';
+
+  // Needs update warning (status=update)
+  const updateTools = STATE.tools.filter(t => t.status === 'update');
+  const updateHtml = updateTools.length
+    ? updateTools.map(t => `<div class="warn-item" onclick="STATE.adminMode&&openEditModal('${t.id}')">
+        <span class="warn-item-icon">🟡</span>
+        <span class="warn-item-text"><strong>${t.name}</strong> — 待更新</span>
+      </div>`).join('')
+    : '<div class="dash-empty">✅ 无待更新工具</div>';
+
+  return `<div class="dashboard-row">
+    <div class="dash-widget">
+      <div class="dash-widget-header">
+        <span>🕐</span>
+        <div class="dash-widget-title">最近更新工具</div>
+        <span class="dash-widget-badge green">最新 4 个</span>
+      </div>
+      ${recentHtml}
+    </div>
+    <div class="dash-widget">
+      <div class="dash-widget-header">
+        <span>⭐</span>
+        <div class="dash-widget-title">本周推荐工具</div>
+        <span class="dash-widget-badge blue">推荐使用</span>
+      </div>
+      ${weekRecHtml}
+    </div>
+    <div class="dash-widget">
+      <div class="dash-widget-header">
+        <span>🔗</span>
+        <div class="dash-widget-title">待补链接提醒</div>
+        <span class="dash-widget-badge ${noLinkTools.length ? 'yellow' : 'green'}">${noLinkTools.length} 个</span>
+      </div>
+      ${noLinkHtml}
+    </div>
+    <div class="dash-widget">
+      <div class="dash-widget-header">
+        <span>🟡</span>
+        <div class="dash-widget-title">待更新工具</div>
+        <span class="dash-widget-badge ${updateTools.length ? 'yellow' : 'green'}">${updateTools.length} 个</span>
+      </div>
+      ${updateHtml}
+    </div>
+  </div>`;
+}
+
+function renderFilterBar(count) {
+  const activeFilters = [];
+  if (STATE.filterStatus !== 'all') activeFilters.push(`<span class="filter-tag">${STATUS_MAP[STATE.filterStatus]?.label||STATE.filterStatus} <button onclick="clearFilter('filterStatus')">✕</button></span>`);
+  if (STATE.filterUser !== 'all') activeFilters.push(`<span class="filter-tag">${USER_MAP[STATE.filterUser]||STATE.filterUser} <button onclick="clearFilter('filterUser')">✕</button></span>`);
+  if (STATE.filterRecommend !== 'all') activeFilters.push(`<span class="filter-tag">${RECOMMEND_MAP[STATE.filterRecommend]?.label||STATE.filterRecommend} <button onclick="clearFilter('filterRecommend')">✕</button></span>`);
+  if (STATE.activeRole) activeFilters.push(`<span class="filter-tag">${ROLE_FILTER[STATE.activeRole]?.label} <button onclick="setRole(null)">✕</button></span>`);
+
+  const noLinkBtn = STATE.adminMode
+    ? `<button class="topbar-btn admin-only" style="padding:5px 10px;font-size:12px;display:flex" onclick="filterCat('nolink')">🔗 只看待补链接</button>`
+    : '';
+
+  return `<div class="filter-bar">
+    <span class="filter-label">筛选：</span>
+    <select class="filter-select" id="filterStatus" onchange="handleFilterChange()">
+      <option value="all">全部状态</option>
+      <option value="online">✅ 已上线</option>
+      <option value="test">🔵 测试中</option>
+      <option value="update">🟡 待更新</option>
+      <option value="plan">⚪ 规划中</option>
+    </select>
+    <select class="filter-select" id="filterUser" onchange="handleFilterChange()">
+      <option value="all">全部使用对象</option>
+      <option value="me">我自己</option>
+      <option value="cs">客服团队</option>
+      <option value="channel">渠道伙伴</option>
+      <option value="finance">财务</option>
+      <option value="hr">行政人事</option>
+      <option value="mgmt">管理层</option>
+      <option value="all_users">全员</option>
+    </select>
+    <select class="filter-select" id="filterRecommend" onchange="handleFilterChange()">
+      <option value="all">全部推荐程度</option>
+      <option value="recommended">⭐ 推荐使用</option>
+      <option value="internal">🔵 内部测试</option>
+      <option value="caution">⚠️ 谨慎使用</option>
+      <option value="archived">📦 已归档</option>
+    </select>
+    ${activeFilters.join('')}
+    ${noLinkBtn}
+    <span class="filter-count">共 <strong>${count}</strong> 个</span>
+  </div>`;
+}
+
+function bindFilterSelects() {
+  const fs = document.getElementById('filterStatus');
+  const fu = document.getElementById('filterUser');
+  const fr = document.getElementById('filterRecommend');
+  if (fs) fs.value = STATE.filterStatus;
+  if (fu) fu.value = STATE.filterUser;
+  if (fr) fr.value = STATE.filterRecommend;
+}
+
+function renderGroupedView() {
+  const catOrder = ['cmhk','rebate','channel','kb','hr','finance','service','data','other','plan'];
+  let html = '';
+
+  const pinnedTools = STATE.tools.filter(t => t.pinned);
+  if (pinnedTools.length) {
+    html += `<div class="section-header">
+      <span class="section-title">📌 常用工具</span>
+      <span class="section-count">${pinnedTools.length}</span>
+    </div>
+    <div class="cards-grid">${pinnedTools.map(t => renderCard(t)).join('')}</div>`;
+  }
+
+  for (const cat of catOrder) {
+    const catTools = [...STATE.tools.filter(t => t.cat === cat)].sort((a,b) => {
+      const so = {online:0,test:1,update:2,plan:3};
+      return (so[a.status]||9)-(so[b.status]||9);
+    });
+    if (!catTools.length) continue;
+    const info = CAT_MAP[cat];
+    html += `<div id="section-${cat}">
+      <div class="section-header">
+        <span class="section-title">${info.emoji} ${info.label}</span>
+        <span class="section-count">${catTools.length}</span>
+        <button class="section-open-all" onclick="openAllInCat('${cat}')">一键打开全部 →</button>
+      </div>
+      <div class="cards-grid">${catTools.map(t => renderCard(t)).join('')}</div>
+    </div>`;
+  }
+  return html;
+}
+
+function renderFlatView(tools) {
+  if (!tools.length) return `<div class="empty-state"><div class="emoji">🔍</div><h3>没有找到匹配的工具</h3><p>试试调整搜索词或筛选条件</p></div>`;
+  return `<div class="cards-grid">${tools.map(t => renderCard(t)).join('')}</div>`;
+}
+
+function renderCard(t) {
+  const catInfo = CAT_MAP[t.cat] || CAT_MAP.other;
+  const statusInfo = STATUS_MAP[t.status] || STATUS_MAP.plan;
+  const recInfo = RECOMMEND_MAP[t.recommend] || RECOMMEND_MAP.internal;
+  const noLinkFlag = isNoLink(t);
+
+  const adminBtns = STATE.adminMode
+    ? `<button class="card-icon-btn pin-btn ${t.pinned?'pinned':''}" title="${t.pinned?'取消置顶':'置顶'}" onclick="togglePin('${t.id}')">📌</button>
+       <button class="card-icon-btn" title="编辑" onclick="openEditModal('${t.id}')">✏️</button>
+       <button class="card-icon-btn" title="删除" onclick="confirmDelete('${t.id}')">🗑️</button>`
+    : `<button class="card-icon-btn pin-btn ${t.pinned?'pinned':''}" title="${t.pinned?'取消置顶':'置顶'}" onclick="togglePin('${t.id}')">📌</button>`;
+
+  const versionBadge = t.version ? `<span class="card-version">${t.version}</span>` : '';
+
+  const dateStr = t.date ? new Date(t.date).toLocaleDateString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'}) : '';
+
+  return `<div class="tool-card ${t.pinned?'pinned':''}" id="card-${t.id}">
+    <div class="card-top ${catInfo.cls}">
+      <span class="card-emoji">${t.emoji||'🔧'}</span>
+      <div class="card-meta">
+        <div class="card-name" title="${t.name}">${t.name}${versionBadge}</div>
+        <div class="card-badges">
+          <span class="badge ${statusInfo.cls}">${statusInfo.label}</span>
+          <span class="badge ${recInfo.cls}">${recInfo.icon} ${recInfo.label}</span>
+          <span class="badge badge-user">${USER_MAP[t.user]||t.user}</span>
+          ${t.pinned?'<span class="badge badge-pin">📌</span>':''}
+        </div>
+      </div>
+      <div class="card-actions-top">${adminBtns}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">${t.desc||'暂无描述'}</div>
+      ${t.problem?`<div class="card-problem"><strong>💡 解决的问题：</strong>${t.problem}</div>`:''}
+      <div class="card-detail-row">
+        <span>🏷️ ${catInfo.label}</span>
+        ${t.owner?`<span>👤 ${t.owner}</span>`:''}
+        ${dateStr?`<span>📅 ${dateStr}</span>`:''}
+      </div>
+    </div>
+    <div class="card-expand" id="expand-${t.id}">
+      ${t.owner?`<div class="card-expand-item"><strong>维护人：</strong>${t.owner}${t.dept?` · ${t.dept}部门`:''}</div>`:'<div class="card-expand-item" style="color:var(--red)"><strong>⚠ 维护人：</strong>未指定</div>'}
+      ${t.version?`<div class="card-expand-item"><strong>版本号：</strong>${t.version}</div>`:'<div class="card-expand-item" style="color:var(--yellow)"><strong>版本号：</strong>未填写</div>'}
+      ${t.note?`<div class="card-expand-item"><strong>备注：</strong>${t.note}</div>`:''}
+      <div class="card-expand-item"><strong>数据 ID：</strong><code style="font-size:10.5px;background:var(--bg);padding:1px 4px;border-radius:3px">${t.id}</code></div>
+      <div class="card-expand-item"><strong>完整链接：</strong><span style="word-break:break-all;font-size:11.5px">${t.url||'暂无'}</span></div>
+    </div>
+    <div class="card-footer">
+      <span class="url-text ${noLinkFlag?'no-link':''}" title="${t.url||''}">${noLinkFlag?'⚠ 待补正式链接':t.url}</span>
+      <button class="btn-sm copy" onclick="copyLink('${t.id}')" title="复制链接">🔗</button>
+      <button class="btn-expand" onclick="toggleExpand('${t.id}')">详情 ▾</button>
+      ${noLinkFlag
+        ? `<button class="btn-open disabled" disabled>链接待填写</button>`
+        : `<button class="btn-open" onclick="window.open('${t.url}','_blank')">打开 →</button>`}
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function isNoLink(t) {
+  return !t.url || t.url.trim() === '' || t.url.includes('example.com');
+}
+
+function scrollToCard(id) {
+  const el = document.getElementById(`card-${id}`);
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.style.outline = '2px solid var(--primary)'; setTimeout(() => el.style.outline='', 1500); }
+  else { filterCat('all'); setTimeout(() => { const e2 = document.getElementById(`card-${id}`); if(e2) e2.scrollIntoView({behavior:'smooth',block:'center'}); },300); }
+}
+
+function toggleExpand(id) {
+  const el = document.getElementById(`expand-${id}`);
+  if (!el) return;
+  el.classList.toggle('open');
+  const btn = el.parentElement.querySelector('.btn-expand');
+  if (btn) btn.textContent = el.classList.contains('open') ? '收起 ▴' : '详情 ▾';
+}
+
+function togglePin(id) {
+  const t = STATE.tools.find(x => x.id === id);
+  if (!t) return;
+  t.pinned = !t.pinned;
+  saveData();
+  updateNavCounts();
+  render();
+  toast(t.pinned ? '已添加到常用工具 📌' : '已从常用工具移除', 'info');
+}
+
+function copyLink(id) {
+  const t = STATE.tools.find(x => x.id === id);
+  if (!t) return;
+  if (isNoLink(t)) { toast('该工具暂无正式链接', 'warning'); return; }
+  navigator.clipboard.writeText(t.url).then(() => toast('链接已复制 ✓', 'success')).catch(() => toast('复制失败，请手动复制', 'error'));
+}
+
+function confirmDelete(id) {
+  const t = STATE.tools.find(x => x.id === id);
+  if (!t) return;
+  if (!confirm(`确认删除工具「${t.name}」？此操作不可撤销。`)) return;
+  STATE.tools = STATE.tools.filter(x => x.id !== id);
+  saveData();
+  updateNavCounts();
+  render();
+  toast('工具已删除', 'warning');
+}
+
+function openAllInCat(cat) {
+  const tools = STATE.tools.filter(t => t.cat === cat && !isNoLink(t));
+  if (!tools.length) { toast('该分类暂无可用链接', 'warning'); return; }
+  tools.forEach(t => window.open(t.url, '_blank'));
+  toast(`已打开 ${tools.length} 个工具`, 'success');
+}
+
+// ============================================================
+// FILTERS & NAVIGATION
+// ============================================================
+function handleSearch() {
+  STATE.searchQuery = document.getElementById('mainSearchInput').value.trim();
+  if (STATE.searchQuery) STATE.currentCat = '__search__';
+  else STATE.currentCat = 'all';
+  render();
+}
+
+function handleSideSearch(val) {
+  document.getElementById('mainSearchInput').value = val;
+  handleSearch();
+}
+
+function handleFilterChange() {
+  STATE.filterStatus = document.getElementById('filterStatus').value;
+  const fv = document.getElementById('filterUser').value;
+  STATE.filterUser = fv === 'all_users' ? 'all' : fv;
+  STATE.filterRecommend = document.getElementById('filterRecommend').value;
+  render();
+}
+
+function clearFilter(which) {
+  if (which === 'filterStatus') { STATE.filterStatus = 'all'; }
+  else if (which === 'filterUser') { STATE.filterUser = 'all'; }
+  else if (which === 'filterRecommend') { STATE.filterRecommend = 'all'; }
+  render();
+}
+
+function setRole(role) {
+  STATE.activeRole = role;
+  if (role) {
+    STATE.currentCat = '__role__';
+    document.getElementById('mainSearchInput').value = '';
+    STATE.searchQuery = '';
+    const info = ROLE_FILTER[role];
+    document.getElementById('topbar-heading').textContent = info.label;
+    document.getElementById('topbar-sub').textContent = '角色视图';
+  } else {
+    STATE.currentCat = 'all';
+    document.getElementById('topbar-heading').textContent = '全部工具';
+    document.getElementById('topbar-sub').textContent = '';
+  }
+  updateNavActive('all');
+  render();
+}
+
+function filterCat(cat) {
+  STATE.currentCat = cat;
+  STATE.searchQuery = '';
+  STATE.activeRole = null;
+  document.getElementById('mainSearchInput').value = '';
+  document.getElementById('sideSearchInput').value = '';
+  updateNavActive(cat);
+  const labels = {
+    all:'全部工具', pinned:'常用工具', recent:'最近更新', nolink:'待补链接工具',
+    cmhk:'CMHK 业务管理', rebate:'返现 / 活动管理', channel:'渠道合作与客户转化',
+    kb:'内部知识库', hr:'行政人事工具', finance:'财务 / 合同 / 编号',
+    service:'售后服务支持', data:'运营数据与分析', other:'其他工具', plan:'待规划工具',
+  };
+  document.getElementById('topbar-heading').textContent = labels[cat] || cat;
+  document.getElementById('topbar-sub').textContent = '';
+  render();
+}
+
+function updateNavActive(cat) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById(`nav-${cat}`);
+  if (el) el.classList.add('active');
+}
+
+function getFilteredTools() {
+  let tools = [...STATE.tools];
+
+  if (STATE.currentCat === 'pinned') tools = tools.filter(t => t.pinned);
+  else if (STATE.currentCat === 'recent') tools = [...tools].sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,6);
+  else if (STATE.currentCat === 'nolink') tools = tools.filter(t => isNoLink(t));
+  else if (STATE.currentCat === '__role__' && STATE.activeRole) {
+    const allowed = ROLE_FILTER[STATE.activeRole].users;
+    tools = tools.filter(t => allowed.includes(t.user));
+  } else if (STATE.currentCat !== 'all' && STATE.currentCat !== '__search__') {
+    tools = tools.filter(t => t.cat === STATE.currentCat);
+  }
+
+  if (STATE.searchQuery) {
+    const q = STATE.searchQuery.toLowerCase();
+    tools = tools.filter(t =>
+      t.name.toLowerCase().includes(q) ||
+      (t.desc||'').toLowerCase().includes(q) ||
+      (t.problem||'').toLowerCase().includes(q) ||
+      (CAT_MAP[t.cat]?.label||'').toLowerCase().includes(q) ||
+      (t.owner||'').toLowerCase().includes(q)
+    );
+  }
+  if (STATE.filterStatus !== 'all') tools = tools.filter(t => t.status === STATE.filterStatus);
+  if (STATE.filterUser !== 'all') tools = tools.filter(t => t.user === STATE.filterUser);
+  if (STATE.filterRecommend !== 'all') tools = tools.filter(t => t.recommend === STATE.filterRecommend);
+
+  return tools;
+}
+
+function updateNavCounts() {
+  const cats = Object.keys(CAT_MAP);
+  cats.forEach(c => {
+    const el = document.getElementById(`nav-count-${c}`);
+    if (el) el.textContent = STATE.tools.filter(t => t.cat === c).length;
+  });
+  const set = (id, val) => { const e = document.getElementById(id); if(e) e.textContent = val; };
+  set('nav-count-all', STATE.tools.length);
+  set('nav-count-pinned', STATE.tools.filter(t=>t.pinned).length);
+  set('nav-count-recent', Math.min(6, STATE.tools.length));
+  set('nav-count-nolink', STATE.tools.filter(t=>isNoLink(t)).length);
+}
+
+// ============================================================
+// ADD / EDIT MODAL
+// ============================================================
+let _editingId = null;
+
+function openAddModal() {
+  if (!STATE.adminMode) { toast('请先进入维护模式', 'warning'); return; }
+  _editingId = null;
+  document.getElementById('editModalTitle').textContent = '新增工具';
+  clearEditForm();
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('editModal').classList.add('open');
+}
+
+function openEditModal(id) {
+  if (!STATE.adminMode) { toast('请先进入维护模式', 'warning'); return; }
+  const t = STATE.tools.find(x => x.id === id);
+  if (!t) return;
+  _editingId = id;
+  document.getElementById('editModalTitle').textContent = '编辑工具';
+  document.getElementById('f-name').value = t.name;
+  document.getElementById('f-cat').value = t.cat;
+  document.getElementById('f-status').value = t.status;
+  document.getElementById('f-recommend').value = t.recommend || 'internal';
+  document.getElementById('f-user').value = t.user;
+  document.getElementById('f-owner').value = t.owner || '';
+  document.getElementById('f-dept').value = t.dept || '';
+  document.getElementById('f-version').value = t.version || '';
+  document.getElementById('f-emoji').value = t.emoji || '';
+  document.getElementById('f-desc').value = t.desc || '';
+  document.getElementById('f-problem').value = t.problem || '';
+  document.getElementById('f-url').value = t.url || '';
+  document.getElementById('f-note').value = t.note || '';
+  document.getElementById('f-date').value = t.date || '';
+  document.getElementById('editModal').classList.add('open');
+}
+
+function clearEditForm() {
+  ['f-name','f-emoji','f-desc','f-problem','f-url','f-note','f-owner','f-version'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-cat').value = 'cmhk';
+  document.getElementById('f-status').value = 'online';
+  document.getElementById('f-recommend').value = 'recommended';
+  document.getElementById('f-user').value = 'me';
+  document.getElementById('f-dept').value = '';
+}
+
+function saveTool() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { toast('请填写工具名称', 'error'); return; }
+  const data = {
+    name,
+    cat: document.getElementById('f-cat').value,
+    status: document.getElementById('f-status').value,
+    recommend: document.getElementById('f-recommend').value,
+    user: document.getElementById('f-user').value,
+    owner: document.getElementById('f-owner').value.trim(),
+    dept: document.getElementById('f-dept').value,
+    version: document.getElementById('f-version').value.trim(),
+    emoji: document.getElementById('f-emoji').value.trim() || '🔧',
+    desc: document.getElementById('f-desc').value.trim(),
+    problem: document.getElementById('f-problem').value.trim(),
+    url: document.getElementById('f-url').value.trim(),
+    note: document.getElementById('f-note').value.trim(),
+    date: document.getElementById('f-date').value,
+    updatedAt: new Date().toISOString().slice(0,10),
+  };
+  if (_editingId) {
+    const idx = STATE.tools.findIndex(x => x.id === _editingId);
+    if (idx >= 0) { STATE.tools[idx] = { ...STATE.tools[idx], ...data }; toast('工具已更新 ✓', 'success'); }
+  } else {
+    STATE.tools.push({ id: 't' + Date.now(), pinned: false, ...data });
+    toast('工具已新增 ✓', 'success');
+  }
+  saveData(); updateNavCounts(); closeModal('editModal'); render();
+}
+
+// ============================================================
+// PUBLISH CHECK
+// ============================================================
+function openPublishCheck() {
+  if (!STATE.adminMode) { toast('请先进入维护模式', 'warning'); return; }
+  const results = runPublishCheck();
+  const container = document.getElementById('publishCheckResult');
+  const passCount = results.filter(r => r.pass).length;
+  const failCount = results.filter(r => !r.pass).length;
+
+  const summaryColor = failCount === 0 ? 'var(--green)' : failCount <= 3 ? 'var(--yellow)' : 'var(--red)';
+  const summaryIcon = failCount === 0 ? '✅' : '⚠️';
+
+  let html = `<div style="padding:12px 16px;background:var(--bg);border-radius:var(--r-sm);margin-bottom:16px;display:flex;align-items:center;gap:10px">
+    <span style="font-size:22px">${summaryIcon}</span>
+    <div>
+      <div style="font-size:14px;font-weight:700;color:${summaryColor}">${failCount===0?'发布前检查全部通过 🎉':'发现 '+failCount+' 项需要关注'}</div>
+      <div style="font-size:12px;color:var(--text-3)">共 ${results.length} 项检查，${passCount} 通过，${failCount} 需关注</div>
+    </div>
+  </div>
+  <ul class="check-list">`;
+
+  results.forEach(r => {
+    html += `<li class="check-item">
+      <span class="check-icon">${r.pass ? '✅' : (r.level==='warn'?'⚠️':'❌')}</span>
+      <div class="check-text">
+        <strong>${r.title}</strong>
+        <p>${r.desc}</p>
+        ${r.items && r.items.length ? `<div class="names">${r.items.slice(0,5).join('、')}${r.items.length>5?` 等 ${r.items.length} 个`:''}</div>` : ''}
+      </div>
+    </li>`;
+  });
+  html += '</ul>';
+  container.innerHTML = html;
+  document.getElementById('publishModal').classList.add('open');
+}
+
+function runPublishCheck() {
+  const checks = [];
+  const today = new Date().toISOString().slice(0,10);
+  const thirtyDaysAgo = new Date(Date.now()-30*24*3600*1000).toISOString().slice(0,10);
+
+  // 1. Empty links
+  const emptyLink = STATE.tools.filter(t => !t.url || t.url.trim() === '');
+  checks.push({ pass: emptyLink.length===0, level:'error', title:'空链接工具', desc:`有 ${emptyLink.length} 个工具未填写任何链接。`, items: emptyLink.map(t=>t.name) });
+
+  // 2. Example.com placeholders
+  const exampleLink = STATE.tools.filter(t => t.url && t.url.includes('example.com'));
+  checks.push({ pass: exampleLink.length===0, level:'warn', title:'占位链接未替换', desc:`有 ${exampleLink.length} 个工具使用 example.com 占位链接，上线前应替换为正式入口。`, items: exampleLink.map(t=>t.name) });
+
+  // 3. No owner
+  const noOwner = STATE.tools.filter(t => !t.owner || t.owner.trim()==='');
+  checks.push({ pass: noOwner.length===0, level:'warn', title:'工具缺少维护人', desc:`有 ${noOwner.length} 个工具未指定维护人，出问题时无法快速联系。`, items: noOwner.map(t=>t.name) });
+
+  // 4. No version
+  const noVersion = STATE.tools.filter(t => !t.version || t.version.trim()==='');
+  checks.push({ pass: noVersion.length===0, level:'warn', title:'工具缺少版本号', desc:`有 ${noVersion.length} 个工具未填写版本号，不利于版本管理。`, items: noVersion.map(t=>t.name) });
+
+  // 5. Too many plan tools
+  const planTools = STATE.tools.filter(t => t.status === 'plan');
+  const planPct = Math.round(planTools.length / STATE.tools.length * 100);
+  checks.push({ pass: planPct <= 40, level:'warn', title:'规划中工具数量较多', desc:`规划中工具 ${planTools.length} 个，占 ${planPct}%。建议定期清理无进展的规划项，保持导航页内容清爽。`, items:[] });
+
+  // 6. Overdue update tools
+  const overdueUpdate = STATE.tools.filter(t => t.status === 'update' && t.updatedAt && t.updatedAt < thirtyDaysAgo);
+  checks.push({ pass: overdueUpdate.length===0, level:'warn', title:'超期待更新工具', desc:`有 ${overdueUpdate.length} 个工具状态为「待更新」且超过 30 天未处理，建议尽快跟进。`, items: overdueUpdate.map(t=>t.name) });
+
+  // 7. Online tools with no link
+  const onlineNoLink = STATE.tools.filter(t => t.status==='online' && isNoLink(t));
+  checks.push({ pass: onlineNoLink.length===0, level:'error', title:'已上线工具缺少链接', desc:`有 ${onlineNoLink.length} 个状态为「已上线」的工具没有有效链接，用户无法打开。`, items: onlineNoLink.map(t=>t.name) });
+
+  // 8. Total count sanity
+  checks.push({ pass: STATE.tools.length > 0, level:'error', title:'工具数据非空', desc:`当前共 ${STATE.tools.length} 个工具，数据完整。`, items:[] });
+
+  return checks;
+}
+
+// ============================================================
+// DATA MANAGEMENT
+// ============================================================
+function openDataModal() {
+  if (!STATE.adminMode) { toast('请先进入维护模式', 'warning'); return; }
+  document.getElementById('dataOutput').style.display = 'none';
+  document.getElementById('dataModal').classList.add('open');
+}
+
+function exportToolsJSON() {
+  // Export just the tools array as tools.json (for external hosting)
+  const data = { tools: STATE.tools, logs: STATE.logs, exportedAt: new Date().toISOString(), version: '1.5' };
+  downloadJSON(data, 'tools.json');
+  toast('tools.json 已导出 ✓ 上传到网站同目录即可生效', 'success');
+}
+
+function exportFullJSON() {
+  const data = { tools: STATE.tools, logs: STATE.logs, exportedAt: new Date().toISOString(), version: '1.5' };
+  const dateStr = new Date().toISOString().slice(0,10);
+  downloadJSON(data, `joincom-backup-${dateStr}.json`);
+  toast('完整备份已导出 ✓', 'success');
+}
+
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function triggerImport() { document.getElementById('importFileInput').click(); }
+
+function handleImportFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.tools || !Array.isArray(data.tools)) throw new Error('格式错误');
+      if (!confirm(`导入后将覆盖当前数据（共 ${data.tools.length} 个工具）。确认继续？`)) return;
+      STATE.tools = data.tools;
+      STATE.logs = data.logs || STATE.logs;
+      saveData(); updateNavCounts(); render();
+      toast(`导入成功，共 ${data.tools.length} 个工具 ✓`, 'success');
+    } catch (err) {
+      toast('导入失败：文件格式不正确', 'error');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+async function reloadFromJSON() {
+  try {
+    const resp = await fetch('./tools.json', { cache: 'no-cache' });
+    if (!resp.ok) throw new Error('not found');
+    const data = await resp.json();
+    if (!data.tools) throw new Error('invalid');
+    STATE.tools = data.tools;
+    STATE.logs = data.logs || STATE.logs;
+    STATE.dataSource = 'json';
+    saveData(); updateNavCounts(); render();
+    showDatasourceTag('json', 'tools.json');
+    toast('已从 tools.json 重新加载 ✓', 'success');
+  } catch(e) {
+    toast('未找到 tools.json，请先上传文件到同目录', 'warning');
+  }
+}
+
+function copyToolList() {
+  const lines = ['JOINCOM 聚客 · 内部工具清单', `生成时间：${new Date().toLocaleDateString('zh-CN')}`, '─'.repeat(42)];
+  Object.entries(CAT_MAP).forEach(([cat, info]) => {
+    const tools = STATE.tools.filter(t => t.cat === cat);
+    if (!tools.length) return;
+    lines.push('', `【${info.emoji} ${info.label}】`);
+    tools.forEach(t => {
+      const status = STATUS_MAP[t.status]?.label || '';
+      const link = !isNoLink(t) ? t.url : '（链接待补充）';
+      const ver = t.version ? ` ${t.version}` : '';
+      lines.push(`· ${t.name}${ver}（${status}）${link}`);
+    });
+  });
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => toast('工具清单已复制 ✓', 'success')).catch(() => showDataOutput(text));
+}
+
+function generateUpdateNote() {
+  const now = new Date().toLocaleDateString('zh-CN');
+  const total = STATE.tools.length;
+  const online = STATE.tools.filter(t => t.status === 'online').length;
+  const noLinkCount = STATE.tools.filter(t => isNoLink(t)).length;
+  const recent = [...STATE.tools].sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||'')).slice(0,3);
+  const recentStr = recent.map(t => `  · ${t.name}（${STATUS_MAP[t.status]?.label}）`).join('\n');
+
+  const text = `【JOINCOM 内部工具导航 · 更新通知 v1.5】
+
+📅 更新时间：${now}
+📊 工具总数：${total} 个（已上线 ${online} 个）
+${noLinkCount>0?`⚠️ 待补链接：${noLinkCount} 个工具链接尚未完善\n`:''}
+📋 最近更新工具：
+${recentStr}
+
+🔗 访问地址：【请替换为正式 URL】
+💡 使用提示：打开后可按角色（客服/财务/行政等）快速筛选适合自己的工具。
+
+---
+本通知由 JOINCOM 内部工具导航中心 v1.5 自动生成`;
+
+  showDataOutput(text);
+  navigator.clipboard.writeText(text).catch(() => {});
+}
+
+function showDataOutput(text) {
+  document.getElementById('dataOutputText').value = text;
+  document.getElementById('dataOutput').style.display = 'block';
+}
+
+function copyOutputText() {
+  navigator.clipboard.writeText(document.getElementById('dataOutputText').value)
+    .then(() => toast('已复制 ✓', 'success'))
+    .catch(() => toast('请手动复制', 'warning'));
+}
+
+function resetDefault() {
+  if (!confirm('确认重置为默认工具数据？当前所有修改将丢失。')) return;
+  STATE.tools = JSON.parse(JSON.stringify(DEFAULT_TOOLS));
+  STATE.logs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+  saveData(); updateNavCounts(); render();
+  toast('已重置为默认数据 ✓', 'success');
+}
+
+function clearAll() {
+  if (!confirm('确认清空所有本地数据？将恢复为内置默认数据。')) return;
+  localStorage.removeItem('jc_portal_tools');
+  localStorage.removeItem('jc_portal_logs');
+  STATE.tools = JSON.parse(JSON.stringify(DEFAULT_TOOLS));
+  STATE.logs = JSON.parse(JSON.stringify(DEFAULT_LOGS));
+  STATE.dataSource = 'default';
+  showDatasourceTag('default', '内置默认');
+  updateNavCounts(); render();
+  toast('已清空本地数据，恢复为默认数据', 'warning');
+}
+
+// ============================================================
+// CHANGELOG
+// ============================================================
+function openChangelogModal() {
+  renderLogs();
+  document.getElementById('changelogModal').classList.add('open');
+}
+
+function renderLogs() {
+  const container = document.getElementById('logList');
+  const typeMap = {
+    new:    { label:'新增', cls:'badge-status-online' },
+    update: { label:'更新', cls:'badge-status-update' },
+    done:   { label:'完成', cls:'badge-status-test' },
+    fix:    { label:'修复', cls:'badge-rec-caution' },
+  };
+  container.innerHTML = STATE.logs.slice().reverse().map((l, i) => {
+    const tm = typeMap[l.type] || typeMap.update;
+    const realIdx = STATE.logs.length - 1 - i;
+    const delBtn = STATE.adminMode ? `<button class="btn-sm del" onclick="deleteLog(${realIdx})" title="删除">✕</button>` : '';
+    return `<div class="log-item">
+      <span class="log-date">${l.date}</span>
+      <span class="badge ${tm.cls} log-badge">${tm.label}</span>
+      <span style="flex:1">${l.text}</span>
+      ${delBtn}
+    </div>`;
+  }).join('') || '<div style="color:var(--text-3);font-size:13px;padding:10px 0">暂无更新记录</div>';
+}
+
+function addLogEntry() {
+  const text = document.getElementById('newLogText').value.trim();
+  if (!text) { toast('请填写更新内容', 'error'); return; }
+  const type = document.getElementById('logTypeSelect').value;
+  STATE.logs.push({ date: new Date().toISOString().slice(0,10), type, text });
+  saveData();
+  document.getElementById('newLogText').value = '';
+  renderLogs();
+  toast('记录已添加 ✓', 'success');
+}
+
+function deleteLog(idx) {
+  STATE.logs.splice(idx, 1);
+  saveData();
+  renderLogs();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function showHelp() { document.getElementById('helpModal').classList.add('open'); }
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('mobile-open'); }
+
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  const icons = { success:'✓', error:'✕', info:'ℹ', warning:'⚠' };
+  el.innerHTML = `<span>${icons[type]||'ℹ'}</span><span>${msg}</span>`;
+  document.getElementById('toast-wrap').appendChild(el);
+  setTimeout(() => { el.style.transition='opacity 0.3s'; el.style.opacity='0'; }, 2500);
+  setTimeout(() => el.remove(), 2900);
+}
+
+// ============================================================
+// START
+// ============================================================
+init();
 </script>
 </body>
 </html>
